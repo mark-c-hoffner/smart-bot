@@ -1,11 +1,15 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 
+const orchestratorMock = jest.fn()
+
 describe('App', () => {
 
     let App;
 
     beforeEach(async () => {
+        jest.doMock('./Orchestrator', () => orchestratorMock)
+
         const obj = await import('./App.jsx');
         App = obj.default;
     })
@@ -20,12 +24,17 @@ describe('App', () => {
 
     it('displays the title', async () => {
         render(<App />);
-        await waitFor(() => expect(document.title).toBe('smart bot'));
+        await waitFor(() => expect(document.title).toBe('smart-bot'));
     })
 
     it('displays the text', () => {
         const { getByText } = render(<App />);
-        expect(getByText('smart bot')).toBeTruthy();
-        expect(getByText('The smartest bot in the world.')).toBeTruthy();
+        expect(getByText('smart-bot')).toBeTruthy();
+        expect(getByText('The smartest bot on the web.')).toBeTruthy();
+    })
+
+    it('renders Orchestrator component', () => {
+        render(<App />);
+        expect(orchestratorMock).toHaveBeenCalled();
     })
 })
