@@ -1,6 +1,6 @@
-import React from "react"
-import { Helmet } from "react-helmet"
-import './App.css'
+import React from "react";
+import { Helmet } from "react-helmet";
+import './App.css';
 
 /**
  * React Function Component 
@@ -11,14 +11,14 @@ const App = () => {
         <div className="App">
             <Helmet>
                 <meta charset="utf-8" />
-                <title>smart bot</title>
+                <title>smart-bot</title>
             </Helmet>
             <div className="centered" data-testid="title">
-                <h1>smart bot</h1>
-                <h2>The smartest bot in the world.</h2>
+                <h1>smart-bot</h1>
+                <h2>The smartest bot on the web.</h2>
             </div>
         </div >
     )
 }
 
-export default App
+export default App;

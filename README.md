@@ -1,2 +1,2 @@
 # smart-bot
-The smartest bot in the world.
+The smartest bot on the web.
