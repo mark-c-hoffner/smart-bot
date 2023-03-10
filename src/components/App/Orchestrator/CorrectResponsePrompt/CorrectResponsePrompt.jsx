@@ -1,7 +1,10 @@
 import React from "react";
 
 /**
- * React Function Component 
+ * React Function Component displays correct response and prompt for another assertion
+ * @param {Object} imageItem - The picture item for the assertion.
+ * @param {Object} colorItem - The color item for the assertion.
+ * @param {Function} getAnAssertion - Function called to trigger a new assertion.
  * @returns {JSX.Element} - A React Component instance.
  */
 const CorrectResponsePrompt = ({ imageItem, colorItem, getAnAssertion }) => {
