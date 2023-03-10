@@ -40,7 +40,7 @@ describe('Orchestrator', () => {
         expect(assertionPromptMock).not.toHaveBeenCalled();
         fireEvent.click(getByText('See what I know?'));
         expect(assertionPromptMock).toHaveBeenCalledTimes(1);
-        expect(assertionPromptMock.mock.calls[0][0].pictureItem.item).toBe('3');
+        expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
     })
 
@@ -48,11 +48,11 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('See what I know?'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const pictureItem = assertionPromptMock.mock.calls[0][0].pictureItem;
+        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         expect(correctResponsePromptMock).not.toHaveBeenCalled();
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(pictureItem, colorItem));
+        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
         expect(correctResponsePromptMock).toHaveBeenCalledTimes(1);
-        expect(correctResponsePromptMock.mock.calls[0][0].pictureItem.item).toBe('3');
+        expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
     })
 
@@ -60,8 +60,8 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('See what I know?'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const pictureItem = assertionPromptMock.mock.calls[0][0].pictureItem;
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(pictureItem, colorItem));
+        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
+        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
         assertionPromptMock.mockReset();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem));
         expect(assertionPromptMock).toHaveBeenCalledTimes(1);
@@ -71,11 +71,11 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('See what I know?'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const pictureItem = assertionPromptMock.mock.calls[0][0].pictureItem;
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(pictureItem, colorItem));
+        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
+        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
         assertionPromptMock.mockReset();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem));
-        expect(assertionPromptMock.mock.calls[0][0].pictureItem.item).toBe('2');
+        expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('2');
         expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock3');
     })
 
@@ -86,11 +86,11 @@ describe('Orchestrator', () => {
         fireEvent.click(getByText('See what I know?'));
 
         const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const pictureItem1 = assertionPromptMock.mock.calls[0][0].pictureItem;
-        expect(pictureItem1.item).toBe('1');
+        const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
+        expect(imageItem1.item).toBe('1');
         expect(colorItem1.name).toBe('mock2');
 
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(pictureItem1, colorItem1));
+        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem1, colorItem1));
 
         randomMock.mockReturnValue(0);
         assertionPromptMock.mockReset();
@@ -102,8 +102,8 @@ describe('Orchestrator', () => {
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem2));
 
         const colorItem3 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const pictureItem3 = assertionPromptMock.mock.calls[0][0].pictureItem;
-        expect(pictureItem3.item).toBe('1');
+        const imageItem3 = assertionPromptMock.mock.calls[0][0].imageItem;
+        expect(imageItem3.item).toBe('1');
         expect(colorItem3.name).toBe('mock2');
     })
 })

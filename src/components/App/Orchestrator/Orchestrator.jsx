@@ -12,7 +12,7 @@ import CorrectResponsePrompt from "./CorrectResponsePrompt";
  */
 const Orchestrator = () => {
     const [colors, setColors] = useState(matchData);
-    const [pictures, setPictures] = useState(imageData);
+    const [images, setImages] = useState(imageData);
 
     const [assertionComponent, setAssertionComponent] = useState();
     const [responseComponent, setResponseComponent] = useState();
@@ -20,8 +20,8 @@ const Orchestrator = () => {
     const getAnAssertion = (lastColorItem) => {
         setResponseComponent(null);
         const colorItem = getRandomColorItem(lastColorItem);
-        const pictureItem = getPictureItem(colorItem);
-        setAssertionComponent(<AssertionPrompt pictureItem={pictureItem} colorItem={colorItem} handleWrong={handleWrong} handleCorrect={handleCorrect} />);
+        const imageItem = getPictureItem(colorItem);
+        setAssertionComponent(<AssertionPrompt imageItem={imageItem} colorItem={colorItem} handleWrong={handleWrong} handleCorrect={handleCorrect} />);
     }
 
     const getRandomColorItem = (lastColorItem) => {
@@ -35,21 +35,21 @@ const Orchestrator = () => {
     }
 
     const getPictureItem = (colorItem) => {
-        const foundPictureItem = pictures.find(p => p.id === colorItem.match);
+        const foundPictureItem = images.find(p => p.id === colorItem.match);
         if (foundPictureItem != null) {
             return foundPictureItem;
         }
-        const picturesNum = random(0, pictures.length - 1);
-        return pictures[picturesNum];
+        const imagesNum = random(0, images.length - 1);
+        return images[imagesNum];
     }
 
-    const handleWrong = (pictureItem, colorItem) => { }
+    const handleWrong = (imageItem, colorItem) => { }
 
-    const handleCorrect = (pictureItem, colorItem) => {
+    const handleCorrect = (imageItem, colorItem) => {
         setAssertionComponent(null);
-        setResponseComponent(<CorrectResponsePrompt pictureItem={pictureItem} colorItem={colorItem} getAnAssertion={getAnAssertion} />);
-        if (colorItem.match != pictureItem.id) {
-            colorItem.match = pictureItem.id;
+        setResponseComponent(<CorrectResponsePrompt imageItem={imageItem} colorItem={colorItem} getAnAssertion={getAnAssertion} />);
+        if (colorItem.match != imageItem.id) {
+            colorItem.match = imageItem.id;
             setColors((prev) => {
                 const i = prev.findIndex(f => f.name === colorItem.name);
                 prev[i] = colorItem;
