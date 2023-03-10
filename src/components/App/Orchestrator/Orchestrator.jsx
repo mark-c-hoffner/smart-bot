@@ -40,9 +40,11 @@ const Orchestrator = () => {
     }
 
     const getPictureItem = (colorItem) => {
-        const foundPictureItem = pictures.find(p => p.id === colorItem.match);
-        if (foundPictureItem != null) {
-            return foundPictureItem;
+        if (colorItem != null) {
+            const foundPictureItem = pictures.find(p => p.id === colorItem.match);
+            if (foundPictureItem != null) {
+                return foundPictureItem;
+            }
         }
         const picturesNum = random(0, pictures.length - 1);
         return pictures[picturesNum];
@@ -60,7 +62,7 @@ const Orchestrator = () => {
                 (responseComponent != null) ?
                     <> {responseComponent} </>
                     :
-                    <button onClick={getAnAssertion}>See what I know?</button>
+                    <button onClick={() => getAnAssertion(null)}>See what I know?</button>
             }
         </div>
     );
