@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import random from "../../../tools/random";
+import matchData from "../../../tools/matchData";
+import imageData from "../../../tools/imageData";
 
 import AssertionPrompt from "./AssertionPrompt";
 
@@ -8,16 +10,8 @@ import AssertionPrompt from "./AssertionPrompt";
  * @returns {JSX.Element} - A React Component instance.
  */
 const Orchestrator = () => {
-    const [colors, setColors] = useState([
-        { name: "red", match: "gp" },
-        { name: "green", match: "bp" },
-        { name: "blue", match: "rp" }
-    ]);
-    const [pictures, setPictures] = useState([
-        { item: "red picture", id: "rp" },
-        { item: "green picture", id: "gp" },
-        { item: "blue picture", id: "bp" }
-    ]);
+    const [colors, setColors] = useState(matchData);
+    const [pictures, setPictures] = useState(imageData);
 
     const [assertionComponent, setAssertionComponent] = useState();
     const [responseComponent, setResponseComponent] = useState();
