@@ -5,6 +5,7 @@ import imageData from "../../../tools/imageData";
 
 import AssertionPrompt from "./AssertionPrompt";
 import CorrectResponsePrompt from "./CorrectResponsePrompt";
+import TellColorPrompt from "./TellColorPrompt";
 
 /**
  * React Function Component manages picture and color state. Displays assertions and prompts after user input.
@@ -43,8 +44,6 @@ const Orchestrator = () => {
         return images[imagesNum];
     }
 
-    const handleWrong = (imageItem, colorItem) => { }
-
     const handleCorrect = (imageItem, colorItem) => {
         setAssertionComponent(null);
         setResponseComponent(<CorrectResponsePrompt imageItem={imageItem} colorItem={colorItem} getAnAssertion={getAnAssertion} />);
@@ -56,6 +55,22 @@ const Orchestrator = () => {
                 return prev;
             });
         }
+    }
+
+    const handleWrong = (imageItem, colorItem) => {
+        setAssertionComponent(null);
+        setResponseComponent(<TellColorPrompt imageItem={imageItem} colorItem={colorItem} colors={colors} handleColorCorrection={handleColorCorrection} />);
+    }
+
+    const handleColorCorrection = (imageItem, newColor) => { 
+        setResponseComponent(null);
+        const newColorItem = colors.find(e => e.name === newColor);
+        newColorItem.match = imageItem.id;
+        setColors((prev) => {
+            const i = prev.findIndex(f => f.name === newColorItem.name);
+            prev[i] = newColorItem;
+            return prev;
+        });
     }
 
     return (
