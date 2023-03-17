@@ -22,6 +22,9 @@ describe('Orchestrator', () => {
         jest.doMock('./TellColorPrompt', () => tellColorPromptMock)
 
         randomMock.mockReturnValue(0);
+        assertionPromptMock.mockReturnValue(<>assertionPromptMock</>);
+        correctResponsePromptMock.mockReturnValue(<>correctResponsePromptMock</>);
+        tellColorPromptMock.mockReturnValue(<>tellColorPromptMock</>);
 
         const obj = await import('./Orchestrator.jsx');
         Orchestrator = obj.default;
@@ -57,6 +60,7 @@ describe('Orchestrator', () => {
         expect(correctResponsePromptMock).not.toHaveBeenCalled();
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
         expect(correctResponsePromptMock).toHaveBeenCalledTimes(1);
+        expect(getByText('correctResponsePromptMock')).toBeTruthy();
         expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
         expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('HA! :):) I always knew that the 3 was the color mock1. :):)');
@@ -68,9 +72,11 @@ describe('Orchestrator', () => {
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
+        expect(assertionPromptMock).not.toHaveBeenCalled();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem));
         expect(assertionPromptMock).toHaveBeenCalledTimes(1);
+        expect(getByText('assertionPromptMock')).toBeTruthy();
     })
 
     it('removes last color from subsequent assertion calls', () => {
@@ -79,7 +85,7 @@ describe('Orchestrator', () => {
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem));
         expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('2');
         expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock3');
@@ -99,12 +105,12 @@ describe('Orchestrator', () => {
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem1, colorItem1));
 
         randomMock.mockReturnValue(0);
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem1));
 
         const colorItem2 = assertionPromptMock.mock.calls[0][0].colorItem;
         randomMock.mockReturnValueOnce(1);
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem2));
 
         const colorItem3 = assertionPromptMock.mock.calls[0][0].colorItem;
@@ -121,6 +127,7 @@ describe('Orchestrator', () => {
         expect(tellColorPromptMock).not.toHaveBeenCalled();
         act(() => assertionPromptMock.mock.calls[0][0].handleWrong(imageItem, colorItem));
         expect(tellColorPromptMock).toHaveBeenCalledTimes(1);
+        expect(getByText('tellColorPromptMock')).toBeTruthy();
         expect(tellColorPromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(tellColorPromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
         expect(tellColorPromptMock.mock.calls[0][0].colors).toBe(matchDataMock);
@@ -163,7 +170,7 @@ describe('Orchestrator', () => {
 
         const colorCorrectedItem = correctResponsePromptMock.mock.calls[0][0].colorItem;
         randomMock.mockReturnValue(0);
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorCorrectedItem));
 
         const colorItem2 = assertionPromptMock.mock.calls[0][0].colorItem;
@@ -174,7 +181,7 @@ describe('Orchestrator', () => {
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem2, colorItem2));
 
         randomMock.mockReturnValue(0);
-        assertionPromptMock.mockReset();
+        assertionPromptMock.mockClear();
 
         act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(colorItem2));
         const colorItem3 = assertionPromptMock.mock.calls[0][0].colorItem;
