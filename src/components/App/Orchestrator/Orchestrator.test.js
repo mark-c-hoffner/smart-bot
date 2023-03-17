@@ -35,10 +35,15 @@ describe('Orchestrator', () => {
         render(<Orchestrator />);
     })
 
+    it('displays welcome text', () => {
+        const { getByText } = render(<Orchestrator />);
+        expect(getByText('Hi there! :):) I\'m smart-bot. Not to toot my own horn, but some say I\'m the smartest bot on the web. Do you want to see what I know?')).toBeTruthy();
+    })
+
     it('calls assertion component after user click', () => {
         const { getByText } = render(<Orchestrator />);
         expect(assertionPromptMock).not.toHaveBeenCalled();
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
         expect(assertionPromptMock).toHaveBeenCalledTimes(1);
         expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
@@ -46,7 +51,7 @@ describe('Orchestrator', () => {
 
     it('calls response prompt on correct', () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         expect(correctResponsePromptMock).not.toHaveBeenCalled();
@@ -59,7 +64,7 @@ describe('Orchestrator', () => {
 
     it('calls assertion component after user click', () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
@@ -70,7 +75,7 @@ describe('Orchestrator', () => {
 
     it('removes last color from subsequent assertion calls', () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
@@ -84,7 +89,7 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         randomMock.mockReturnValueOnce(2);
         randomMock.mockReturnValueOnce(0);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
 
         const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
@@ -110,7 +115,7 @@ describe('Orchestrator', () => {
 
     it('calls response prompt on wrong', () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
         const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
         expect(tellColorPromptMock).not.toHaveBeenCalled();
@@ -125,7 +130,7 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         randomMock.mockReturnValueOnce(2);
         randomMock.mockReturnValueOnce(0);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
 
         const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
@@ -146,7 +151,7 @@ describe('Orchestrator', () => {
         const { getByText } = render(<Orchestrator />);
         randomMock.mockReturnValueOnce(2);
         randomMock.mockReturnValueOnce(0);
-        fireEvent.click(getByText('See what I know?'));
+        fireEvent.click(getByText('That\'s why I\'m here!'));
 
         const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
         const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;

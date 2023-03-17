@@ -96,7 +96,12 @@ const Orchestrator = () => {
                 (responseComponent != null) ?
                     <> {responseComponent} </>
                     :
-                    <button onClick={() => getAnAssertion(null)}>See what I know?</button>
+                    <>
+                        <h2>
+                            {`Hi there! :):) I'm smart-bot. Not to toot my own horn, but some say I'm the smartest bot on the web. Do you want to see what I know?`}
+                        </h2>
+                        <button onClick={() => getAnAssertion(null)}>That's why I'm here!</button>
+                    </>
             }
         </div>
     );
