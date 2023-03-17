@@ -46,7 +46,14 @@ const Orchestrator = () => {
 
     const handleCorrect = (imageItem, colorItem) => {
         setAssertionComponent(null);
-        setResponseComponent(<CorrectResponsePrompt imageItem={imageItem} colorItem={colorItem} getAnAssertion={getAnAssertion} />);
+        setResponseComponent(
+            <CorrectResponsePrompt
+                imageItem={imageItem}
+                colorItem={colorItem}
+                getAnAssertion={getAnAssertion}
+                promptText={`HA! :):) I always knew that the ${imageItem.item} was the color ${colorItem.name}. :):)`}
+            />
+        );
         if (colorItem.match != imageItem.id) {
             colorItem.match = imageItem.id;
             setColors((prev) => {
@@ -62,7 +69,7 @@ const Orchestrator = () => {
         setResponseComponent(<TellColorPrompt imageItem={imageItem} colorItem={colorItem} colors={colors} handleColorCorrection={handleColorCorrection} />);
     }
 
-    const handleColorCorrection = (imageItem, newColor) => { 
+    const handleColorCorrection = (imageItem, newColor) => {
         setResponseComponent(null);
         const newColorItem = colors.find(e => e.name === newColor);
         newColorItem.match = imageItem.id;
@@ -71,6 +78,14 @@ const Orchestrator = () => {
             prev[i] = newColorItem;
             return prev;
         });
+        setResponseComponent(
+            <CorrectResponsePrompt
+                imageItem={imageItem}
+                colorItem={newColorItem}
+                getAnAssertion={getAnAssertion}
+                promptText={`Oh wow! That makes so much more sense that the ${imageItem.item} is the color ${newColorItem.name}. Thank you so much! :):)`}
+            />
+        );
     }
 
     return (

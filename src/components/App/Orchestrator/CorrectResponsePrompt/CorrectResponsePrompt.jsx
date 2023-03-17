@@ -5,13 +5,14 @@ import React from "react";
  * @param {Object} imageItem - The picture item for the assertion.
  * @param {Object} colorItem - The color item for the assertion.
  * @param {Function} getAnAssertion - Function called to trigger a new assertion.
+ * @param {String} promptText - Text to display with the prompt.
  * @returns {JSX.Element} - A React Component instance.
  */
-const CorrectResponsePrompt = ({ imageItem, colorItem, getAnAssertion }) => {
+const CorrectResponsePrompt = ({ imageItem, colorItem, getAnAssertion, promptText }) => {
     return (
         <div>
             <h2>
-                {`HA! :):) I always knew that the ${imageItem.item} was the color ${colorItem.name}. :):)`}
+                {promptText}
             </h2>
             <button onClick={() => getAnAssertion(colorItem)}>Want to know something else?</button>
         </div>

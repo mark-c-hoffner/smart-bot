@@ -8,6 +8,7 @@ const colorItemMock = {
     name: "testName"
 }
 const getAnAssertionStub = jest.fn();
+const dummyText = "This is dummy text.";
 
 describe('CorrectResponsePrompt', () => {
 
@@ -23,16 +24,16 @@ describe('CorrectResponsePrompt', () => {
     })
 
     it('renders without crashing', () => {
-        render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} />);
+        render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
     })
 
     it('displays the text', () => {
-        const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} />);
-        expect(getByText('HA! :):) I always knew that the testItem was the color testName. :):)')).toBeTruthy();
+        const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
+        expect(getByText('This is dummy text.')).toBeTruthy();
     })
 
     it('calls assertion component after user click', () => {
-        const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} />);
+        const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
         expect(getAnAssertionStub).not.toHaveBeenCalled();
         fireEvent.click(getByText('Want to know something else?'));
         expect(getAnAssertionStub).toHaveBeenCalledTimes(1);
