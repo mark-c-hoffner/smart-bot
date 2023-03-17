@@ -7,10 +7,14 @@ const imageItemMock = {
 const colorItemMock = {
     name: "testName"
 }
+const colorItemMatchMock = {
+    name: "color1"
+}
 const colorsMock = [
     { name: "color1" }, { name: "color2" }, { name: "color3" }
 ]
 const handleColorCorrectionStub = jest.fn();
+const handleCorrectStub = jest.fn();
 
 describe('TellColorPrompt', () => {
 
@@ -94,5 +98,52 @@ describe('TellColorPrompt', () => {
         fireEvent.click(getByText('That\'s right!'))
         expect(handleColorCorrectionStub.mock.calls[0][0]).toBe(imageItemMock);
         expect(handleColorCorrectionStub.mock.calls[0][1]).toBe('color1');
+    })
+
+    it('prompts user on same color selection', async () => {
+        const { getByText, getAllByText } = render(<TellColorPrompt imageItem={imageItemMock} colorItem={colorItemMatchMock} colors={colorsMock} handleColorCorrection={handleColorCorrectionStub} handleCorrect={handleCorrectStub} />);
+        fireEvent.mouseDown(getAllByText('color1')[0]);
+        await waitFor(() => {
+            expect(getAllByText('color1')[1]).toBeTruthy();
+        });
+        fireEvent.mouseDown(getAllByText('color1')[1])
+        await waitFor(() => {
+            expect(getByText('Wait a second! So you\'re saying testItem is the color color1? But that\'s what I said. And you said I was wrong!')).toBeTruthy();
+            expect(getByText('My mistake, smart-bot. Let me try again.')).toBeTruthy();
+            expect(getByText('I\'m so sorry, smart-bot. You were right the first time.')).toBeTruthy();
+        });
+    })
+
+    it('prompts user on same color correction wrong', async () => {
+        const { getByText, getAllByText } = render(<TellColorPrompt imageItem={imageItemMock} colorItem={colorItemMatchMock} colors={colorsMock} handleColorCorrection={handleColorCorrectionStub} handleCorrect={handleCorrectStub} />);
+        fireEvent.mouseDown(getAllByText('color1')[0]);
+        await waitFor(() => {
+            expect(getAllByText('color1')[1]).toBeTruthy();
+        });
+        fireEvent.mouseDown(getAllByText('color1')[1])
+        await waitFor(() => {
+            expect(getByText('My mistake, smart-bot. Let me try again.')).toBeTruthy();
+        });
+        fireEvent.click(getByText('My mistake, smart-bot. Let me try again.'))
+        await waitFor(() => {
+            expect(getByText('That\'s okay! We all make mistakes. :) ha ha. So then what color is testItem?')).toBeTruthy();
+            expect(getAllByText('color1')[0]).toBeTruthy();
+        })
+    })
+
+    it('calls color correct', async () => {
+        const { getByText, getAllByText } = render(<TellColorPrompt imageItem={imageItemMock} colorItem={colorItemMatchMock} colors={colorsMock} handleColorCorrection={handleColorCorrectionStub} handleCorrect={handleCorrectStub} />);
+        fireEvent.mouseDown(getAllByText('color1')[0]);
+        await waitFor(() => {
+            expect(getAllByText('color1')[1]).toBeTruthy();
+        });
+        fireEvent.mouseDown(getAllByText('color1')[1])
+        await waitFor(() => {
+            expect(getByText('My mistake, smart-bot. Let me try again.')).toBeTruthy();
+        });
+        expect(handleCorrectStub).not.toHaveBeenCalled();
+        fireEvent.click(getByText('I\'m so sorry, smart-bot. You were right the first time.'))
+        expect(handleCorrectStub.mock.calls[0][0]).toBe(imageItemMock);
+        expect(handleCorrectStub.mock.calls[0][1]).toBe(colorItemMatchMock);
     })
 })

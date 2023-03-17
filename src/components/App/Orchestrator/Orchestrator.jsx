@@ -66,7 +66,7 @@ const Orchestrator = () => {
 
     const handleWrong = (imageItem, colorItem) => {
         setAssertionComponent(null);
-        setResponseComponent(<TellColorPrompt imageItem={imageItem} colorItem={colorItem} colors={colors} handleColorCorrection={handleColorCorrection} />);
+        setResponseComponent(<TellColorPrompt imageItem={imageItem} colorItem={colorItem} colors={colors} handleColorCorrection={handleColorCorrection} handleCorrect={handleCorrect} />);
     }
 
     const handleColorCorrection = (imageItem, newColor) => {
