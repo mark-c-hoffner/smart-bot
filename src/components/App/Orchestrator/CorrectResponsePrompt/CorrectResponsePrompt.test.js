@@ -35,7 +35,7 @@ describe('CorrectResponsePrompt', () => {
     it('calls assertion component after user click', () => {
         const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
         expect(getAnAssertionStub).not.toHaveBeenCalled();
-        fireEvent.click(getByText('Want to know something else?'));
+        fireEvent.click(getByText('What else do you know?'));
         expect(getAnAssertionStub).toHaveBeenCalledTimes(1);
         expect(getAnAssertionStub.mock.calls[0][0]).toBe(colorItemMock);
     })

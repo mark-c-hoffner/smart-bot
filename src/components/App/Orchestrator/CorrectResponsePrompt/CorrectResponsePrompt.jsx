@@ -14,7 +14,7 @@ const CorrectResponsePrompt = ({ imageItem, colorItem, getAnAssertion, promptTex
             <h2>
                 {promptText}
             </h2>
-            <button onClick={() => getAnAssertion(colorItem)}>Want to know something else?</button>
+            <button onClick={() => getAnAssertion(colorItem)}>What else do you know?</button>
         </div>
     );
 };
