@@ -61,7 +61,7 @@ describe('TellColorPrompt', () => {
         });
         fireEvent.mouseDown(getByText('color1'))
         await waitFor(() => {
-            expect(getByText('Great! Thanks for your help! So testItem is actually the color color1?')).toBeTruthy();
+            expect(getByText('Oh wow... That\'s interesting... So testItem is actually the color color1?')).toBeTruthy();
             expect(getByText('No, sorry! Let me try again.')).toBeTruthy();
             expect(getByText('That\'s right!')).toBeTruthy();
         });

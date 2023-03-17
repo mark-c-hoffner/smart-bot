@@ -50,7 +50,7 @@ const TellColorPrompt = ({ imageItem, colorItem, colors, handleColorCorrection, 
                     {(colorItem.name != selectedColorState) ?
                         <>
                             <h2>
-                                {`Great! Thanks for your help! So ${imageItem.item} is actually the color ${selectedColorState}?`}
+                                {`Oh wow... That's interesting... So ${imageItem.item} is actually the color ${selectedColorState}?`}
                             </h2>
                             <button onClick={() => handleTryAgain()}>No, sorry! Let me try again.</button>
                             <button onClick={() => handleColorCorrection(imageItem, selectedColorState)}>That's right!</button>
