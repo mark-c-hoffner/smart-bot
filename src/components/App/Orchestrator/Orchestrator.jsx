@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { TypeAnimation } from 'react-type-animation';
 import random from "../../../tools/random";
+import { getWelcomeText } from "../../../tools/text-data";
 import matchData from "../../../tools/matchData";
 import imageData from "../../../tools/imageData";
 
@@ -97,9 +99,9 @@ const Orchestrator = () => {
                     <> {responseComponent} </>
                     :
                     <>
-                        <h2>
-                            {`Hi there! :):) I'm smart-bot. Not to toot my own horn, but some say I'm the smartest bot on the web. Do you want to see what I know?`}
-                        </h2>
+                        <div>
+                            <TypeAnimation wrapper="span" style={{ "white-space": "pre-line" }} sequence={getWelcomeText()} />
+                        </div>
                         <button onClick={() => getAnAssertion(null)}>That's why I'm here!</button>
                     </>
             }
