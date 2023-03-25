@@ -6,13 +6,12 @@ const matchDataMock = [{ name: "mock1", match: "id1" }, { name: "mock3", match: 
 const imageDataMock = [{ item: "1", id: "id5" }, { item: "2", id: "id3" }, { item: "3", id: "id1" }];
 
 const textDataMock = {
-    getWelcomeText: jest.fn()
+    getWelcomeText: jest.fn(),
+    getAnswerIsCorrectText: jest.fn(),
+    getColorCorrectionText: jest.fn()
 };
 
-const typeAnimationMock = jest.fn();
-const TypeAnimationModuleMock = {
-    TypeAnimation: typeAnimationMock
-};
+const textAnimationWrapperMock = jest.fn();
 const assertionPromptMock = jest.fn();
 const correctResponsePromptMock = jest.fn();
 const tellColorPromptMock = jest.fn();
@@ -26,14 +25,16 @@ describe('Orchestrator', () => {
         jest.doMock('../../../tools/matchData', () => matchDataMock)
         jest.doMock('../../../tools/imageData', () => imageDataMock)
         jest.doMock('../../../tools/text-data', () => textDataMock)
-        jest.doMock('react-type-animation', () => TypeAnimationModuleMock)
+        jest.doMock('../TextAnimationWrapper', () => textAnimationWrapperMock)
         jest.doMock('./AssertionPrompt', () => assertionPromptMock)
         jest.doMock('./CorrectResponsePrompt', () => correctResponsePromptMock)
         jest.doMock('./TellColorPrompt', () => tellColorPromptMock)
 
         randomMock.mockReturnValue(0);
-        textDataMock.getWelcomeText.mockReturnValue(['testWelcomeMessage']);
-        typeAnimationMock.mockReturnValue(<>typeAnimationMock</>);
+        textDataMock.getWelcomeText.mockReturnValue('testWelcomeMessage');
+        textDataMock.getAnswerIsCorrectText.mockReturnValue('testAnswerIsCorrectMessage');
+        textDataMock.getColorCorrectionText.mockReturnValue('testColorCorrectionMessage');
+        textAnimationWrapperMock.mockReturnValue(<>textAnimationWrapperMock</>);
         assertionPromptMock.mockReturnValue(<>assertionPromptMock</>);
         correctResponsePromptMock.mockReturnValue(<>correctResponsePromptMock</>);
         tellColorPromptMock.mockReturnValue(<>tellColorPromptMock</>);
@@ -52,10 +53,8 @@ describe('Orchestrator', () => {
 
     it('displays welcome text', () => {
         const { getByText } = render(<Orchestrator />);
-        expect(typeAnimationMock.mock.calls[0][0].wrapper).toBe("span");
-        expect(typeAnimationMock.mock.calls[0][0].style["white-space"]).toBe("pre-line");
-        expect(typeAnimationMock.mock.calls[0][0].sequence[0]).toBe("testWelcomeMessage");
-        expect(getByText('typeAnimationMock')).toBeTruthy();
+        expect(textAnimationWrapperMock.mock.calls[0][0].textSourceArray).toBe("testWelcomeMessage");
+        expect(getByText('textAnimationWrapperMock')).toBeTruthy();
     })
 
     it('calls assertion component after user click', () => {
@@ -78,7 +77,7 @@ describe('Orchestrator', () => {
         expect(getByText('correctResponsePromptMock')).toBeTruthy();
         expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('3');
         expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
-        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('HA! :):) I always knew that the 3 was the color mock1. :):)');
+        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('testAnswerIsCorrectMessage');
     })
 
     it('calls assertion component after user click', () => {
@@ -166,7 +165,7 @@ describe('Orchestrator', () => {
         expect(correctResponsePromptMock).toHaveBeenCalledTimes(1);
         expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('1');
         expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock3');
-        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('Oh wow! That makes so much more sense that the 1 is the color mock3. Thank you so much! :):)');
+        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('testColorCorrectionMessage');
     })
 
     it('updates colors on correction', () => {

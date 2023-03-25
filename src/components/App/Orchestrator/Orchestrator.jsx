@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { TypeAnimation } from 'react-type-animation';
 import random from "../../../tools/random";
-import { getWelcomeText } from "../../../tools/text-data";
+import { getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText } from "../../../tools/text-data";
 import matchData from "../../../tools/matchData";
 import imageData from "../../../tools/imageData";
 
+import TextAnimationWrapper from "../TextAnimationWrapper";
 import AssertionPrompt from "./AssertionPrompt";
 import CorrectResponsePrompt from "./CorrectResponsePrompt";
 import TellColorPrompt from "./TellColorPrompt";
@@ -53,7 +53,7 @@ const Orchestrator = () => {
                 imageItem={imageItem}
                 colorItem={colorItem}
                 getAnAssertion={getAnAssertion}
-                promptText={`HA! :):) I always knew that the ${imageItem.item} was the color ${colorItem.name}. :):)`}
+                promptText={getAnswerIsCorrectText(imageItem.item, colorItem.name)}
             />
         );
         if (colorItem.match != imageItem.id) {
@@ -85,7 +85,7 @@ const Orchestrator = () => {
                 imageItem={imageItem}
                 colorItem={newColorItem}
                 getAnAssertion={getAnAssertion}
-                promptText={`Oh wow! That makes so much more sense that the ${imageItem.item} is the color ${newColorItem.name}. Thank you so much! :):)`}
+                promptText={getColorCorrectionText(imageItem.item, newColorItem.name)}
             />
         );
     }
@@ -99,9 +99,7 @@ const Orchestrator = () => {
                     <> {responseComponent} </>
                     :
                     <>
-                        <div>
-                            <TypeAnimation wrapper="span" style={{ "white-space": "pre-line" }} sequence={getWelcomeText()} />
-                        </div>
+                        <TextAnimationWrapper textSourceArray={getWelcomeText()} />
                         <button onClick={() => getAnAssertion(null)}>That's why I'm here!</button>
                     </>
             }

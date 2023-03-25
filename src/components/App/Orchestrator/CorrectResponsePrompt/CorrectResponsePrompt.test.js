@@ -7,14 +7,19 @@ const imageItemMock = {
 const colorItemMock = {
     name: "testName"
 }
+
+const textAnimationWrapperMock = jest.fn();
 const getAnAssertionStub = jest.fn();
-const dummyText = "This is dummy text.";
+const dummyText = ["This is dummy text."];
 
 describe('CorrectResponsePrompt', () => {
 
     let CorrectResponsePrompt;
 
     beforeEach(async () => {
+        jest.doMock('../../TextAnimationWrapper', () => textAnimationWrapperMock)
+        textAnimationWrapperMock.mockReturnValue(<>textAnimationWrapperMock</>);
+
         const obj = await import('./CorrectResponsePrompt.jsx');
         CorrectResponsePrompt = obj.default;
     })
@@ -27,9 +32,14 @@ describe('CorrectResponsePrompt', () => {
         render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
     })
 
-    it('displays the text', () => {
+    it('displays the text animation wrapper', () => {
         const { getByText } = render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
-        expect(getByText('This is dummy text.')).toBeTruthy();
+        expect(getByText('textAnimationWrapperMock')).toBeTruthy();
+    })
+
+    it('passes the text', () => {
+        render(<CorrectResponsePrompt imageItem={imageItemMock} colorItem={colorItemMock} getAnAssertion={getAnAssertionStub} promptText={dummyText}/>);
+        expect(textAnimationWrapperMock.mock.calls[0][0].textSourceArray[0]).toBe("This is dummy text.");
     })
 
     it('calls assertion component after user click', () => {
