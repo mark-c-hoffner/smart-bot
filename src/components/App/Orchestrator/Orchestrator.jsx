@@ -20,30 +20,30 @@ const Orchestrator = () => {
     const [assertionComponent, setAssertionComponent] = useState();
     const [responseComponent, setResponseComponent] = useState();
 
-    const getAnAssertion = (lastColorItem) => {
+    const getAnAssertion = (lastImageItem) => {
         setResponseComponent(null);
-        const colorItem = getRandomColorItem(lastColorItem);
-        const imageItem = getPictureItem(colorItem);
+        const imageItem = getRandomImageItem(lastImageItem);
+        const colorItem = getColorItem(imageItem);
         setAssertionComponent(<AssertionPrompt imageItem={imageItem} colorItem={colorItem} handleWrong={handleWrong} handleCorrect={handleCorrect} />);
     }
 
-    const getRandomColorItem = (lastColorItem) => {
-        const colorCopy = [...colors];
-        if (lastColorItem != null) {
-            const i = colorCopy.indexOf(lastColorItem);
-            colorCopy.splice(i, 1);
+    const getRandomImageItem = (lastImageItem) => {
+        const imageCopy = [...images];
+        if (lastImageItem != null) {
+            const i = imageCopy.indexOf(lastImageItem);
+            imageCopy.splice(i, 1);
         }
-        const colorNum = random(0, colorCopy.length - 1);
-        return colorCopy[colorNum];
+        const imageNum = random(0, imageCopy.length - 1);
+        return imageCopy[imageNum];
     }
 
-    const getPictureItem = (colorItem) => {
-        const foundPictureItem = images.find(p => p.id === colorItem.match);
-        if (foundPictureItem != null) {
-            return foundPictureItem;
+    const getColorItem = (imageItem) => {
+        const foundColorItem = colors.find(p => p.match === imageItem.id);
+        if (foundColorItem != null) {
+            return foundColorItem;
         }
-        const imagesNum = random(0, images.length - 1);
-        return images[imagesNum];
+        const colorNum = random(0, colors.length - 1);
+        return colors[colorNum];
     }
 
     const handleCorrect = (imageItem, colorItem) => {
@@ -78,6 +78,8 @@ const Orchestrator = () => {
         setColors((prev) => {
             const i = prev.findIndex(f => f.name === newColorItem.name);
             prev[i] = newColorItem;
+            console.log(images)
+            console.log(prev)
             return prev;
         });
         setResponseComponent(

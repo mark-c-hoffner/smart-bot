@@ -13,7 +13,7 @@ const CorrectResponsePrompt = ({ imageItem, colorItem, getAnAssertion, promptTex
     return (
         <div>
             <TextAnimationWrapper textSourceArray={promptText} />
-            <button onClick={() => getAnAssertion(colorItem)}>What else do you know?</button>
+            <button onClick={() => getAnAssertion(imageItem)}>What else do you know?</button>
         </div>
     );
 };

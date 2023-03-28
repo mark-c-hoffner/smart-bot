@@ -47,6 +47,6 @@ describe('CorrectResponsePrompt', () => {
         expect(getAnAssertionStub).not.toHaveBeenCalled();
         fireEvent.click(getByText('What else do you know?'));
         expect(getAnAssertionStub).toHaveBeenCalledTimes(1);
-        expect(getAnAssertionStub.mock.calls[0][0]).toBe(colorItemMock);
+        expect(getAnAssertionStub.mock.calls[0][0]).toBe(imageItemMock);
     })
 })
