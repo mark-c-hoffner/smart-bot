@@ -1,7 +1,11 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import Dropdown from "react-dropdown";
 import 'react-dropdown/style.css';
+
+import { getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText } from "../../../../tools/text-data";
+import TextAnimationWrapper from "../../TextAnimationWrapper";
 
 /**
  * React Function Component displays correct response and prompt for another assertion
@@ -13,12 +17,12 @@ import 'react-dropdown/style.css';
  * @returns {JSX.Element} - A React Component instance.
  */
 const TellColorPrompt = ({ imageItem, colorItem, colors, handleColorCorrection, handleCorrect }) => {
-    const [wrongString, setWrongString] = useState(`Oh no! :( I'm so sorry. You must be very smart-bot. Would you be able to help me become smart like you? What color is ${imageItem.item}?`);
-    const [selectedColorState, setSelectedColorState] = useState(null);
+    const [wrongText, setWrongText] = useState(getWrongText(imageItem.item));
+    const [interactable, setInteractable] = useState();
 
-    const handleDropdownChange = (e) => {
-        setSelectedColorState(e.value);
-    };
+    useEffect(() => {
+        setInteractableToDropDown();
+    }, []);
 
     const getDropdownDisplayItems = (data) => {
         const options = [];
@@ -31,40 +35,39 @@ const TellColorPrompt = ({ imageItem, colorItem, colors, handleColorCorrection, 
         return options;
     };
 
+    const setInteractableToDropDown = () => {
+        setInteractable(<Dropdown options={getDropdownDisplayItems(colors)} onChange={handleDropdownChange} value={colorItem.name} />);
+    }
+
+    const handleDropdownChange = (e) => {
+        if (colorItem.name != e.value) {
+            setWrongText(getCorrectionText(imageItem.item, e.value));
+            setInteractable(
+                <>
+                    <button onClick={() => handleTryAgain()}>No, sorry! Let me try again.</button>
+                    <button onClick={() => handleColorCorrection(imageItem, e.value)}>That's right!</button>
+                </>
+            );
+        } else {
+            setWrongText(getCorrectionMistakeText(imageItem.item, e.value));
+            setInteractable(
+                <>
+                    <button onClick={() => handleTryAgain()}>My mistake, smart-bot. Let me try again.</button>
+                    <button onClick={() => handleCorrect(imageItem, colorItem)}>I'm so sorry, smart-bot. You were right the first time.</button>
+                </>
+            );
+        }
+    };
+
     const handleTryAgain = () => {
-        setSelectedColorState(null);
-        setWrongString(`That's okay! We all make mistakes. :) ha ha. So then what color is ${imageItem.item}?`)
+        setInteractableToDropDown();
+        setWrongText(getMistakeText(imageItem.item))
     };
 
     return (
         <div>
-            {(selectedColorState === null) ?
-                <>
-                    <h2>
-                        {wrongString}
-                    </h2>
-                    <Dropdown options={getDropdownDisplayItems(colors)} onChange={handleDropdownChange} value={colorItem.name} placeholder="Select an option" />
-                </>
-                :
-                <>
-                    {(colorItem.name != selectedColorState) ?
-                        <>
-                            <h2>
-                                {`Oh wow... That's interesting... So ${imageItem.item} is actually the color ${selectedColorState}?`}
-                            </h2>
-                            <button onClick={() => handleTryAgain()}>No, sorry! Let me try again.</button>
-                            <button onClick={() => handleColorCorrection(imageItem, selectedColorState)}>That's right!</button>
-                        </>
-                        :
-                        <>
-                            <h2>
-                                {`Wait a second! So you're saying ${imageItem.item} is the color ${selectedColorState}? But that's what I said. And you said I was wrong!`}
-                            </h2>
-                            <button onClick={() => handleTryAgain()}>My mistake, smart-bot. Let me try again.</button>
-                            <button onClick={() => handleCorrect(imageItem, colorItem)}>I'm so sorry, smart-bot. You were right the first time.</button>
-                        </>
-                    }
-                </>}
+            <TextAnimationWrapper textSourceArray={wrongText} />
+            {interactable}
         </div>
     );
 };

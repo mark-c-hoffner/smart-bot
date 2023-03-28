@@ -1,6 +1,14 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 
+const textDataMock = {
+    getWrongText: jest.fn(),
+    getMistakeText: jest.fn(),
+    getCorrectionText: jest.fn(),
+    getCorrectionMistakeText: jest.fn()
+};
+const textAnimationWrapperMock = jest.fn();
+
 const imageItemMock = {
     item: "testItem"
 }
@@ -21,6 +29,15 @@ describe('TellColorPrompt', () => {
     let TellColorPrompt;
 
     beforeEach(async () => {
+        jest.doMock('../../../../tools/text-data', () => textDataMock)
+        jest.doMock('../../TextAnimationWrapper', () => textAnimationWrapperMock)
+
+        textDataMock.getWrongText.mockImplementation((data1) => `testWrongText ${data1}`);
+        textDataMock.getMistakeText.mockImplementation((data1) => `testMistakeText ${data1}`);
+        textDataMock.getCorrectionText.mockImplementation((data1, data2) => `testCorrectionText ${data1} ${data2}`);
+        textDataMock.getCorrectionMistakeText.mockImplementation((data1, data2) => `testCorrectionMistakeText ${data1} ${data2}`);
+        textAnimationWrapperMock.mockImplementation(({textSourceArray}) => <>{textSourceArray}</>);
+
         const obj = await import('./TellColorPrompt.jsx');
         TellColorPrompt = obj.default;
     })
@@ -35,7 +52,7 @@ describe('TellColorPrompt', () => {
 
     it('displays the text', () => {
         const { getByText } = render(<TellColorPrompt imageItem={imageItemMock} colorItem={colorItemMock} colors={colorsMock} handleColorCorrection={handleColorCorrectionStub} />);
-        expect(getByText('Oh no! :( I\'m so sorry. You must be very smart-bot. Would you be able to help me become smart like you? What color is testItem?')).toBeTruthy();
+        expect(getByText('testWrongText testItem')).toBeTruthy();
     })
 
     it('displays the colorItem', () => {
@@ -61,7 +78,7 @@ describe('TellColorPrompt', () => {
         });
         fireEvent.mouseDown(getByText('color1'))
         await waitFor(() => {
-            expect(getByText('Oh wow... That\'s interesting... So testItem is actually the color color1?')).toBeTruthy();
+            expect(getByText('testCorrectionText testItem color1')).toBeTruthy();
             expect(getByText('No, sorry! Let me try again.')).toBeTruthy();
             expect(getByText('That\'s right!')).toBeTruthy();
         });
@@ -79,7 +96,7 @@ describe('TellColorPrompt', () => {
         });
         fireEvent.click(getByText('No, sorry! Let me try again.'))
         await waitFor(() => {
-            expect(getByText('That\'s okay! We all make mistakes. :) ha ha. So then what color is testItem?')).toBeTruthy();
+            expect(getByText('testMistakeText testItem')).toBeTruthy();
             expect(getByText('testName')).toBeTruthy();
         })
     })
@@ -108,7 +125,7 @@ describe('TellColorPrompt', () => {
         });
         fireEvent.mouseDown(getAllByText('color1')[1])
         await waitFor(() => {
-            expect(getByText('Wait a second! So you\'re saying testItem is the color color1? But that\'s what I said. And you said I was wrong!')).toBeTruthy();
+            expect(getByText('testCorrectionMistakeText testItem color1')).toBeTruthy();
             expect(getByText('My mistake, smart-bot. Let me try again.')).toBeTruthy();
             expect(getByText('I\'m so sorry, smart-bot. You were right the first time.')).toBeTruthy();
         });
@@ -126,7 +143,7 @@ describe('TellColorPrompt', () => {
         });
         fireEvent.click(getByText('My mistake, smart-bot. Let me try again.'))
         await waitFor(() => {
-            expect(getByText('That\'s okay! We all make mistakes. :) ha ha. So then what color is testItem?')).toBeTruthy();
+            expect(getByText('testMistakeText testItem')).toBeTruthy();
             expect(getAllByText('color1')[0]).toBeTruthy();
         })
     })
