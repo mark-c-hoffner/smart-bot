@@ -1,110 +1,86 @@
-import React, { useState } from "react";
-import random from "../../../tools/random";
-import { getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText } from "../../../tools/text-data";
-import matchData from "../../../tools/matchData";
-import imageData from "../../../tools/imageData";
+import React from "react";
+import { useState } from "react";
 
+import { getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
 import TextAnimationWrapper from "../TextAnimationWrapper";
-import AssertionPrompt from "./AssertionPrompt";
-import CorrectResponsePrompt from "./CorrectResponsePrompt";
-import TellColorPrompt from "./TellColorPrompt";
+import DropdownWrapper from "../DropdownWrapper";
+import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOptions } from "../../../tools/matchDataManager";
 
 /**
  * React Function Component manages picture and color state. Displays assertions and prompts after user input.
  * @returns {JSX.Element} - A React Component instance.
  */
 const Orchestrator = () => {
-    const [colors, setColors] = useState(matchData);
-    const [images, setImages] = useState(imageData);
-
-    const [assertionComponent, setAssertionComponent] = useState();
-    const [responseComponent, setResponseComponent] = useState();
+    const [textToAnimate, setTextToAnimate] = useState(getWelcomeText());
+    const [interactable, setInteractable] = useState(<button onClick={() => getAnAssertion(null)}>That's why I'm here!</button>);
 
     const getAnAssertion = (lastImageItem) => {
-        setResponseComponent(null);
         const imageItem = getRandomImageItem(lastImageItem);
-        const colorItem = getColorItem(imageItem);
-        setAssertionComponent(<AssertionPrompt imageItem={imageItem} colorItem={colorItem} handleWrong={handleWrong} handleCorrect={handleCorrect} />);
-    }
+        const colorItem = getColorItemFromImage(imageItem);
 
-    const getRandomImageItem = (lastImageItem) => {
-        const imageCopy = [...images];
-        if (lastImageItem != null) {
-            const i = imageCopy.indexOf(lastImageItem);
-            imageCopy.splice(i, 1);
-        }
-        const imageNum = random(0, imageCopy.length - 1);
-        return imageCopy[imageNum];
-    }
-
-    const getColorItem = (imageItem) => {
-        const foundColorItem = colors.find(p => p.match === imageItem.id);
-        if (foundColorItem != null) {
-            return foundColorItem;
-        }
-        const colorNum = random(0, colors.length - 1);
-        return colors[colorNum];
+        setTextToAnimate(getAssertionText(imageItem.item, colorItem.name));
+        setInteractable(<>
+            <button onClick={() => handleWrong(imageItem, colorItem)}>Wrong!</button>
+            <button onClick={() => handleCorrect(imageItem, colorItem)}>That's right!</button>
+        </>)
     }
 
     const handleCorrect = (imageItem, colorItem) => {
-        setAssertionComponent(null);
-        setResponseComponent(
-            <CorrectResponsePrompt
-                imageItem={imageItem}
-                colorItem={colorItem}
-                getAnAssertion={getAnAssertion}
-                promptText={getAnswerIsCorrectText(imageItem.item, colorItem.name)}
-            />
-        );
-        if (colorItem.match != imageItem.id) {
-            colorItem.match = imageItem.id;
-            setColors((prev) => {
-                const i = prev.findIndex(f => f.name === colorItem.name);
-                prev[i] = colorItem;
-                return prev;
-            });
-        }
+        updateColors(imageItem, colorItem.name);
+
+        setTextToAnimate(getAnswerIsCorrectText(imageItem.item, colorItem.name));
+        setInteractable(getAssertionButton());
     }
 
     const handleWrong = (imageItem, colorItem) => {
-        setAssertionComponent(null);
-        setResponseComponent(<TellColorPrompt imageItem={imageItem} colorItem={colorItem} colors={colors} handleColorCorrection={handleColorCorrection} handleCorrect={handleCorrect} />);
+        setTextToAnimate(getWrongText(imageItem.item));
+        setInteractable(getDropdownWrapper(imageItem, colorItem));
     }
+
+    const handleDropdownChange = (imageItem, colorItem, e) => {
+        if (colorItem.name != e.value) {
+            setTextToAnimate(getCorrectionText(imageItem.item, e.value));
+            setInteractable(
+                <>
+                    <button onClick={() => handleTryAgain(imageItem, colorItem)}>No, sorry! Let me try again.</button>
+                    <button onClick={() => handleColorCorrection(imageItem, e.value)}>That's right!</button>
+                </>
+            );
+        } else {
+            setTextToAnimate(getCorrectionMistakeText(imageItem.item, e.value));
+            setInteractable(
+                <>
+                    <button onClick={() => handleTryAgain(imageItem, colorItem)}>My mistake, smart-bot. Let me try again.</button>
+                    <button onClick={() => handleCorrect(imageItem, colorItem)}>I'm so sorry, smart-bot. You were right the first time.</button>
+                </>
+            );
+        }
+    };
+
+    const handleTryAgain = (imageItem, colorItem) => {
+        setTextToAnimate(getMistakeText(imageItem.item))
+        setInteractable(getDropdownWrapper(imageItem, colorItem));
+    };
 
     const handleColorCorrection = (imageItem, newColor) => {
-        setResponseComponent(null);
-        const newColorItem = colors.find(e => e.name === newColor);
-        newColorItem.match = imageItem.id;
-        setColors((prev) => {
-            const i = prev.findIndex(f => f.name === newColorItem.name);
-            prev[i] = newColorItem;
-            console.log(images)
-            console.log(prev)
-            return prev;
-        });
-        setResponseComponent(
-            <CorrectResponsePrompt
-                imageItem={imageItem}
-                colorItem={newColorItem}
-                getAnAssertion={getAnAssertion}
-                promptText={getColorCorrectionText(imageItem.item, newColorItem.name)}
-            />
-        );
+        const newColorItem = updateColors(imageItem, newColor);
+        
+        setTextToAnimate(getColorCorrectionText(imageItem.item, newColorItem.name));
+        setInteractable(getAssertionButton());
     }
 
+    const getAssertionButton = (imageItem) => {
+        return <button onClick={() => getAnAssertion(imageItem)}>What else do you know?</button>;
+    }
+
+    const getDropdownWrapper = (imageItem, colorItem) => {
+        return <DropdownWrapper imageItem={imageItem} colorItem={colorItem} colors={getAllColorOptions()} handleDropdownChange={handleDropdownChange} />;
+    }
+    
     return (
         <div>
-            {(assertionComponent != null) ?
-                <> {assertionComponent} </>
-                :
-                (responseComponent != null) ?
-                    <> {responseComponent} </>
-                    :
-                    <>
-                        <TextAnimationWrapper textSourceArray={getWelcomeText()} />
-                        <button onClick={() => getAnAssertion(null)}>That's why I'm here!</button>
-                    </>
-            }
+            <TextAnimationWrapper textSourceArray={textToAnimate} />
+            {interactable}
         </div>
     );
 };

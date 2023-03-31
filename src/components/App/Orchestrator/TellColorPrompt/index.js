@@ -1,1 +1,0 @@
-export { default } from './TellColorPrompt.jsx';

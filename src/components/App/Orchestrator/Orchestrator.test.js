@@ -1,50 +1,53 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent, waitFor, act } from '@testing-library/react';
 
-const randomMock = jest.fn();
-const matchDataMock = [];
-const imageDataMock = [];
+const matchDataManagerMock = {
+    getRandomImageItem: jest.fn(),
+    getColorItemFromImage: jest.fn(),
+    updateColors: jest.fn(),
+    getAllColorOptions: jest.fn()
+};
 
 const textDataMock = {
     getWelcomeText: jest.fn(),
     getAnswerIsCorrectText: jest.fn(),
-    getColorCorrectionText: jest.fn()
+    getColorCorrectionText: jest.fn(),
+    getWrongText: jest.fn(),
+    getMistakeText: jest.fn(),
+    getCorrectionText: jest.fn(),
+    getCorrectionMistakeText: jest.fn(),
+    getAssertionText: jest.fn()
 };
 
 const textAnimationWrapperMock = jest.fn();
-const assertionPromptMock = jest.fn();
-const correctResponsePromptMock = jest.fn();
-const tellColorPromptMock = jest.fn();
+const dropdownWrapperMock = jest.fn();
 
 describe('Orchestrator', () => {
 
     let Orchestrator;
 
     beforeEach(async () => {
-        jest.doMock('../../../tools/random', () => randomMock)
-        jest.doMock('../../../tools/matchData', () => matchDataMock)
-        jest.doMock('../../../tools/imageData', () => imageDataMock)
+        jest.doMock('../../../tools/matchDataManager', () => matchDataManagerMock)
         jest.doMock('../../../tools/text-data', () => textDataMock)
         jest.doMock('../TextAnimationWrapper', () => textAnimationWrapperMock)
-        jest.doMock('./AssertionPrompt', () => assertionPromptMock)
-        jest.doMock('./CorrectResponsePrompt', () => correctResponsePromptMock)
-        jest.doMock('./TellColorPrompt', () => tellColorPromptMock)
+        jest.doMock('../DropdownWrapper', () => dropdownWrapperMock)
 
-        matchDataMock[0] = { name: "mock2", match: "none" };
-        matchDataMock[1] = { name: "mock3", match: "id3" };
-        matchDataMock[2] = { name: "mock1", match: "id1" };
-        imageDataMock[0] = { item: "3", id: "id1" };
-        imageDataMock[1] = { item: "2", id: "id3" };
-        imageDataMock[2] = { item: "1", id: "id5" };
+        matchDataManagerMock.getRandomImageItem.mockReturnValue({ item: "3", id: "id1" });
+        matchDataManagerMock.getColorItemFromImage.mockReturnValue({ name: "mock1", match: "id1" });
+        matchDataManagerMock.updateColors.mockReturnValue({ name: 'updatedColorName' });
+        matchDataManagerMock.getAllColorOptions.mockReturnValue('mockAllColorOptions');
 
-        randomMock.mockReturnValue(0);
-        textDataMock.getWelcomeText.mockReturnValue('testWelcomeMessage');
-        textDataMock.getAnswerIsCorrectText.mockReturnValue('testAnswerIsCorrectMessage');
-        textDataMock.getColorCorrectionText.mockReturnValue('testColorCorrectionMessage');
-        textAnimationWrapperMock.mockReturnValue(<>textAnimationWrapperMock</>);
-        assertionPromptMock.mockReturnValue(<>assertionPromptMock</>);
-        correctResponsePromptMock.mockReturnValue(<>correctResponsePromptMock</>);
-        tellColorPromptMock.mockReturnValue(<>tellColorPromptMock</>);
+        textDataMock.getWelcomeText.mockImplementation(() => `testWelcomeMessage`);
+        textDataMock.getAssertionText.mockImplementation((data1, data2) => `testAssertionText ${data1} ${data2}`);
+        textDataMock.getAnswerIsCorrectText.mockImplementation((data1, data2) => `testAnswerIsCorrectText ${data1} ${data2}`);
+        textDataMock.getWrongText.mockImplementation((data1) => `testWrongText ${data1}`);
+        textDataMock.getCorrectionText.mockImplementation((data1, data2) => `testCorrectionText ${data1} ${data2}`);
+        textDataMock.getCorrectionMistakeText.mockImplementation((data1, data2) => `testCorrectionMistakeText ${data1} ${data2}`);
+        textDataMock.getColorCorrectionText.mockImplementation((data1, data2) => `testColorCorrectionText ${data1} ${data2}`);
+        textDataMock.getMistakeText.mockImplementation((data1) => `testMistakeText ${data1}`);
+
+        textAnimationWrapperMock.mockImplementation(({ textSourceArray }) => <>{textSourceArray}</>);
+        dropdownWrapperMock.mockReturnValue(<>dropdownWrapperMock</>);
 
         const obj = await import('./Orchestrator.jsx');
         Orchestrator = obj.default;
@@ -60,153 +63,119 @@ describe('Orchestrator', () => {
 
     it('displays welcome text', () => {
         const { getByText } = render(<Orchestrator />);
-        expect(textAnimationWrapperMock.mock.calls[0][0].textSourceArray).toBe("testWelcomeMessage");
-        expect(getByText('textAnimationWrapperMock')).toBeTruthy();
+        expect(getByText('testWelcomeMessage')).toBeTruthy();
     })
 
-    it('calls assertion component after user click', () => {
+    it('displays assertion text after user click', async () => {
         const { getByText } = render(<Orchestrator />);
-        expect(assertionPromptMock).not.toHaveBeenCalled();
         fireEvent.click(getByText('That\'s why I\'m here!'));
-        expect(assertionPromptMock).toHaveBeenCalledTimes(1);
-        expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('3');
-        expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
+        await waitFor(() => {
+            expect(getByText(`testAssertionText 3 mock1`)).toBeTruthy();
+        });
     })
 
-    it('calls response prompt on correct', () => {
+    it('displays correct text after user click correct', async () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-        const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(correctResponsePromptMock).not.toHaveBeenCalled();
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
-        expect(correctResponsePromptMock).toHaveBeenCalledTimes(1);
-        expect(getByText('correctResponsePromptMock')).toBeTruthy();
-        expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('3');
-        expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
-        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('testAnswerIsCorrectMessage');
+        fireEvent.click(getByText('That\'s right!'));
+        await waitFor(() => {
+            expect(getByText(`testAnswerIsCorrectText 3 mock1`)).toBeTruthy();
+        });
     })
 
-    it('calls assertion component after user click', () => {
+    it('calls update colors on correct', async () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-        const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
-        assertionPromptMock.mockClear();
-        expect(assertionPromptMock).not.toHaveBeenCalled();
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem));
-        expect(assertionPromptMock).toHaveBeenCalledTimes(1);
-        expect(getByText('assertionPromptMock')).toBeTruthy();
+        fireEvent.click(getByText('That\'s right!'));
+        expect(matchDataManagerMock.updateColors.mock.calls[0][0].id).toBe('id1');
+        expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('mock1');
     })
 
-    it('removes last color from subsequent assertion calls', () => {
+    it('displays correct text after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-        const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem, colorItem));
-        assertionPromptMock.mockClear();
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem));
-        expect(assertionPromptMock.mock.calls[0][0].imageItem.item).toBe('2');
-        expect(assertionPromptMock.mock.calls[0][0].colorItem.name).toBe('mock3');
+        fireEvent.click(getByText('Wrong!'));
+        await waitFor(() => {
+            expect(getByText(/testWrongText 3/)).toBeTruthy();
+        });
     })
 
-    it('updates color when a guess was made', () => {
+    it('displays dropdown after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
-        randomMock.mockReturnValueOnce(2);
-        randomMock.mockReturnValueOnce(0);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-
-        const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem1.item).toBe('1');
-        expect(colorItem1.name).toBe('mock2');
-
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem1, colorItem1));
-
-        randomMock.mockReturnValue(0);
-        assertionPromptMock.mockClear();
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem1));
-
-        const imageItem2 = assertionPromptMock.mock.calls[0][0].imageItem;
-        randomMock.mockReturnValueOnce(1);
-        assertionPromptMock.mockClear();
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem2));
-
-        const colorItem3 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem3 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem3.item).toBe('1');
-        expect(colorItem3.name).toBe('mock2');
+        fireEvent.click(getByText('Wrong!'));
+        await waitFor(() => {
+            expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
+        });
     })
 
-    it('calls response prompt on wrong', () => {
+    it('displays correction text if dropdown selection is different from given', async () => {
         const { getByText } = render(<Orchestrator />);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-        const colorItem = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(tellColorPromptMock).not.toHaveBeenCalled();
-        act(() => assertionPromptMock.mock.calls[0][0].handleWrong(imageItem, colorItem));
-        expect(tellColorPromptMock).toHaveBeenCalledTimes(1);
-        expect(getByText('tellColorPromptMock')).toBeTruthy();
-        expect(tellColorPromptMock.mock.calls[0][0].imageItem.item).toBe('3');
-        expect(tellColorPromptMock.mock.calls[0][0].colorItem.name).toBe('mock1');
-        expect(tellColorPromptMock.mock.calls[0][0].colors).toBe(matchDataMock);
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
+        await waitFor(() => {
+            expect(getByText(/testCorrectionText 3 dropdownValue/)).toBeTruthy();
+        });
     })
 
-    it('calls correctresponseprompt on correction', () => {
+    it('displays correction mistake text if dropdown selection is the same as given', async () => {
         const { getByText } = render(<Orchestrator />);
-        randomMock.mockReturnValueOnce(2);
-        randomMock.mockReturnValueOnce(0);
         fireEvent.click(getByText('That\'s why I\'m here!'));
-
-        const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem1.item).toBe('1');
-        expect(colorItem1.name).toBe('mock2');
-
-        act(() => assertionPromptMock.mock.calls[0][0].handleWrong(imageItem1, colorItem1));
-
-        expect(correctResponsePromptMock).not.toHaveBeenCalled();
-        act(() => tellColorPromptMock.mock.calls[0][0].handleColorCorrection(imageItem1, 'mock3'));
-        expect(correctResponsePromptMock).toHaveBeenCalledTimes(1);
-        expect(correctResponsePromptMock.mock.calls[0][0].imageItem.item).toBe('1');
-        expect(correctResponsePromptMock.mock.calls[0][0].colorItem.name).toBe('mock3');
-        expect(correctResponsePromptMock.mock.calls[0][0].promptText).toBe('testColorCorrectionMessage');
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
+        await waitFor(() => {
+            expect(getByText(/testCorrectionMistakeText 3 dropdownValue/)).toBeTruthy();
+        });
     })
 
-    it('updates colors on correction', () => {
+    it('displays dropdown and mistake text if user aborts different correction', async () => {
         const { getByText } = render(<Orchestrator />);
-        randomMock.mockReturnValueOnce(2);
-        randomMock.mockReturnValueOnce(0);
         fireEvent.click(getByText('That\'s why I\'m here!'));
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
+        fireEvent.click(getByText('No, sorry! Let me try again.'));
+        await waitFor(() => {
+            expect(getByText(/testMistakeText 3/)).toBeTruthy();
+            expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
+        });
+    })
 
-        const colorItem1 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem1 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem1.item).toBe('1');
-        expect(colorItem1.name).toBe('mock2');
+    it('displays dropdown and mistake text if user aborts same correction', async () => {
+        const { getByText } = render(<Orchestrator />);
+        fireEvent.click(getByText('That\'s why I\'m here!'));
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
+        fireEvent.click(getByText('My mistake, smart-bot. Let me try again.'));
+        await waitFor(() => {
+            expect(getByText(/testMistakeText 3/)).toBeTruthy();
+            expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
+        });
+    })
 
-        act(() => assertionPromptMock.mock.calls[0][0].handleWrong(imageItem1, colorItem1));
-        act(() => tellColorPromptMock.mock.calls[0][0].handleColorCorrection(imageItem1, 'mock3'));
+    it('displays color correction text', async () => {
+        const { getByText } = render(<Orchestrator />);
+        fireEvent.click(getByText('That\'s why I\'m here!'));
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
+        fireEvent.click(getByText('That\'s right!'));
+        await waitFor(() => {
+            expect(getByText(/testColorCorrectionText 3 updatedColorName/)).toBeTruthy();
+            expect(matchDataManagerMock.updateColors.mock.calls[0][0].item).toBe('3');
+            expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('dropdownValue');
+        });
+    })
 
-        randomMock.mockReturnValue(0);
-        assertionPromptMock.mockClear();
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem1));
-
-        const colorItem2 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem2 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem2.item).toBe('3');
-        expect(colorItem2.name).toBe('mock1');
-
-        act(() => assertionPromptMock.mock.calls[0][0].handleCorrect(imageItem2, colorItem2));
-
-        randomMock.mockReturnValue(1);
-        assertionPromptMock.mockClear();
-
-        act(() => correctResponsePromptMock.mock.calls[0][0].getAnAssertion(imageItem2));
-        const colorItem3 = assertionPromptMock.mock.calls[0][0].colorItem;
-        const imageItem3 = assertionPromptMock.mock.calls[0][0].imageItem;
-        expect(imageItem3.item).toBe('1');
-        expect(colorItem3.name).toBe('mock3');
+    it('displays color correction text', async () => {
+        const { getByText } = render(<Orchestrator />);
+        fireEvent.click(getByText('That\'s why I\'m here!'));
+        fireEvent.click(getByText('Wrong!'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
+        fireEvent.click(getByText('I\'m so sorry, smart-bot. You were right the first time.'));
+        await waitFor(() => {
+            expect(getByText(/testAnswerIsCorrectText 3 dropdownValue/)).toBeTruthy();
+            expect(matchDataManagerMock.updateColors.mock.calls[0][0].item).toBe('3');
+            expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('dropdownValue');
+        });
     })
 })
