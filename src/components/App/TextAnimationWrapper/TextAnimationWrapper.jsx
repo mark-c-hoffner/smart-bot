@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { TypeAnimation } from 'react-type-animation';
 
 const animationDelay = 500;

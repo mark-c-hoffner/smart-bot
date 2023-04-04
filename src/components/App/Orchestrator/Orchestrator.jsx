@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
 import TextAnimationWrapper from "../TextAnimationWrapper";
@@ -64,7 +63,7 @@ const Orchestrator = () => {
 
     const handleColorCorrection = (imageItem, newColor) => {
         const newColorItem = updateColors(imageItem, newColor);
-        
+
         setTextToAnimate(getColorCorrectionText(imageItem.item, newColorItem.name));
         setInteractable(getAssertionButton());
     }
@@ -76,7 +75,7 @@ const Orchestrator = () => {
     const getDropdownWrapper = (imageItem, colorItem) => {
         return <DropdownWrapper imageItem={imageItem} colorItem={colorItem} colors={getAllColorOptions()} handleDropdownChange={handleDropdownChange} />;
     }
-    
+
     return (
         <div>
             <TextAnimationWrapper textSourceArray={textToAnimate} />
