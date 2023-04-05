@@ -34,17 +34,16 @@ describe('Orchestrator', () => {
 
         matchDataManagerMock.getRandomImageItem.mockReturnValue({ item: "3", id: "id1" });
         matchDataManagerMock.getColorItemFromImage.mockReturnValue({ name: "mock1", match: "id1" });
-        matchDataManagerMock.updateColors.mockReturnValue({ name: 'updatedColorName' });
         matchDataManagerMock.getAllColorOptions.mockReturnValue('mockAllColorOptions');
 
-        textDataMock.getWelcomeText.mockImplementation(() => `testWelcomeMessage`);
-        textDataMock.getAssertionText.mockImplementation((data1, data2) => `testAssertionText ${data1} ${data2}`);
-        textDataMock.getAnswerIsCorrectText.mockImplementation((data1, data2) => `testAnswerIsCorrectText ${data1} ${data2}`);
-        textDataMock.getWrongText.mockImplementation((data1) => `testWrongText ${data1}`);
-        textDataMock.getCorrectionText.mockImplementation((data1, data2) => `testCorrectionText ${data1} ${data2}`);
-        textDataMock.getCorrectionMistakeText.mockImplementation((data1, data2) => `testCorrectionMistakeText ${data1} ${data2}`);
-        textDataMock.getColorCorrectionText.mockImplementation((data1, data2) => `testColorCorrectionText ${data1} ${data2}`);
-        textDataMock.getMistakeText.mockImplementation((data1) => `testMistakeText ${data1}`);
+        textDataMock.getWelcomeText.mockImplementation(() => { return { body: `testWelcomeMessage`, buttons: [`welcome button1`] } });
+        textDataMock.getAssertionText.mockImplementation((data1, data2) => { return { body: `testAssertionText ${data1} ${data2}`, buttons: [`assertion button1`, `assertion button2`] } });
+        textDataMock.getAnswerIsCorrectText.mockImplementation((data1, data2) => { return { body: `testAnswerIsCorrectText ${data1} ${data2}`, buttons: [`answerIsCorrect button1`, `answerIsCorrect button2`] } });
+        textDataMock.getWrongText.mockImplementation((data1) => { return { body: `testWrongText ${data1}`, buttons: [] } });
+        textDataMock.getCorrectionText.mockImplementation((data1, data2) => { return { body: `testCorrectionText ${data1} ${data2}`, buttons: [`correction button1`, `correction button2`] } });
+        textDataMock.getCorrectionMistakeText.mockImplementation((data1, data2) => { return { body: `testCorrectionMistakeText ${data1} ${data2}`, buttons: [`correctionMistake button1`, `correctionMistake button2`] } });
+        textDataMock.getColorCorrectionText.mockImplementation((data1, data2) => { return { body: `testColorCorrectionText ${data1} ${data2}`, buttons: [`colorCorrection button1`, `colorCorrection button2`] } });
+        textDataMock.getMistakeText.mockImplementation((data1) => { return { body: `testMistakeText ${data1}`, buttons: [] } });
 
         textAnimationWrapperMock.mockImplementation(({ textSourceArray }) => <>{textSourceArray}</>);
         dropdownWrapperMock.mockReturnValue(<>dropdownWrapperMock</>);
@@ -68,7 +67,7 @@ describe('Orchestrator', () => {
 
     it('displays assertion text after user click', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
+        fireEvent.click(getByText('welcome button1'));
         await waitFor(() => {
             expect(getByText(`testAssertionText 3 mock1`)).toBeTruthy();
         });
@@ -76,8 +75,8 @@ describe('Orchestrator', () => {
 
     it('displays correct text after user click correct', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('That\'s right!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button2'));
         await waitFor(() => {
             expect(getByText(`testAnswerIsCorrectText 3 mock1`)).toBeTruthy();
         });
@@ -85,16 +84,16 @@ describe('Orchestrator', () => {
 
     it('calls update colors on correct', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('That\'s right!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button2'));
         expect(matchDataManagerMock.updateColors.mock.calls[0][0].id).toBe('id1');
         expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('mock1');
     })
 
     it('displays correct text after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         await waitFor(() => {
             expect(getByText(/testWrongText 3/)).toBeTruthy();
         });
@@ -102,8 +101,8 @@ describe('Orchestrator', () => {
 
     it('displays dropdown after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         await waitFor(() => {
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
         });
@@ -111,8 +110,8 @@ describe('Orchestrator', () => {
 
     it('displays correction text if dropdown selection is different from given', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
         await waitFor(() => {
             expect(getByText(/testCorrectionText 3 dropdownValue/)).toBeTruthy();
@@ -121,8 +120,8 @@ describe('Orchestrator', () => {
 
     it('displays correction mistake text if dropdown selection is the same as given', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
         await waitFor(() => {
             expect(getByText(/testCorrectionMistakeText 3 dropdownValue/)).toBeTruthy();
@@ -131,10 +130,10 @@ describe('Orchestrator', () => {
 
     it('displays dropdown and mistake text if user aborts different correction', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
-        fireEvent.click(getByText('No, sorry! Let me try again.'));
+        fireEvent.click(getByText('correction button1'));
         await waitFor(() => {
             expect(getByText(/testMistakeText 3/)).toBeTruthy();
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
@@ -143,35 +142,35 @@ describe('Orchestrator', () => {
 
     it('displays dropdown and mistake text if user aborts same correction', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
-        fireEvent.click(getByText('My mistake, smart-bot. Let me try again.'));
+        fireEvent.click(getByText('correctionMistake button1'));
         await waitFor(() => {
             expect(getByText(/testMistakeText 3/)).toBeTruthy();
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
         });
     })
 
-    it('displays color correction text', async () => {
+    it('displays color correction text with different correction', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
-        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
-        fireEvent.click(getByText('That\'s right!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
+        act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'updatedColorName' }));
+        fireEvent.click(getByText('correction button2'));
         await waitFor(() => {
             expect(getByText(/testColorCorrectionText 3 updatedColorName/)).toBeTruthy();
             expect(matchDataManagerMock.updateColors.mock.calls[0][0].item).toBe('3');
-            expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('dropdownValue');
+            expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('updatedColorName');
         });
     })
 
-    it('displays color correction text', async () => {
+    it('displays color correction text with same correction', async () => {
         const { getByText } = render(<Orchestrator />);
-        fireEvent.click(getByText('That\'s why I\'m here!'));
-        fireEvent.click(getByText('Wrong!'));
+        fireEvent.click(getByText('welcome button1'));
+        fireEvent.click(getByText('assertion button1'));
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
-        fireEvent.click(getByText('I\'m so sorry, smart-bot. You were right the first time.'));
+        fireEvent.click(getByText('correctionMistake button2'));
         await waitFor(() => {
             expect(getByText(/testAnswerIsCorrectText 3 dropdownValue/)).toBeTruthy();
             expect(matchDataManagerMock.updateColors.mock.calls[0][0].item).toBe('3');
