@@ -16,12 +16,18 @@ const Orchestrator = () => {
     const [textToAnimate, setTextToAnimate] = useState([]);
     const [interactable, setInteractable] = useState();
     const [imageDisplayItem, setImageDisplayItem] = useState({});
+    const [interactableVisible, setInteractableVisible] = useState(false);
 
     useEffect(() => {
         const text = getWelcomeText(botRank);
         setTextToAnimate(text.body);
-        setInteractable(getButtonWrapper([{ action: () => getAnAssertion(null), text: text.buttons[0] }]));
+        doInteractableChange(getButtonWrapper([{ action: () => getAnAssertion(null), text: text.buttons[0] }]));
     }, []);
+
+    const doInteractableChange = (interactable) => {
+        setInteractableVisible(false);
+        setInteractable(interactable);
+    }
 
     const getAnAssertion = (lastImageItem) => {
         const imageItem = getRandomImageItem(lastImageItem);
@@ -29,7 +35,7 @@ const Orchestrator = () => {
 
         const text = getAssertionText(colorItem.name);
         setTextToAnimate(text.body);
-        setInteractable(
+        doInteractableChange(
             getButtonWrapper([
                 { action: () => handleWrong(imageItem, colorItem), text: text.buttons[0] },
                 { action: () => handleCorrect(imageItem, colorItem.name), text: text.buttons[1] }
@@ -43,20 +49,20 @@ const Orchestrator = () => {
 
         const text = getAnswerIsCorrectText(colorName);
         setTextToAnimate(text.body);
-        setInteractable(getAssertionButton(imageItem, text.buttons));
+        doInteractableChange(getAssertionButton(imageItem, text.buttons));
     }
 
     const handleWrong = (imageItem, colorItem) => {
         const text = getWrongText();
         setTextToAnimate(text.body);
-        setInteractable(getDropdownWrapper(imageItem, colorItem));
+        doInteractableChange(getDropdownWrapper(imageItem, colorItem));
     }
 
     const handleDropdownChange = (imageItem, colorItem, e) => {
         if (colorItem.name != e.value) {
             const text = getCorrectionText(e.value);
             setTextToAnimate(text.body);
-            setInteractable(
+            doInteractableChange(
                 getButtonWrapper([
                     { action: () => handleTryAgain(imageItem, colorItem), text: text.buttons[0] },
                     { action: () => handleColorCorrection(imageItem, e.value), text: text.buttons[1] }
@@ -65,7 +71,7 @@ const Orchestrator = () => {
         } else {
             const text = getCorrectionMistakeText(e.value);
             setTextToAnimate(text.body);
-            setInteractable(
+            doInteractableChange(
                 getButtonWrapper([
                     { action: () => handleTryAgain(imageItem, colorItem), text: text.buttons[0] },
                     { action: () => handleCorrect(imageItem, e.value), text: text.buttons[1] }
@@ -77,7 +83,7 @@ const Orchestrator = () => {
     const handleTryAgain = (imageItem, colorItem) => {
         const text = getMistakeText();
         setTextToAnimate(text.body);
-        setInteractable(getDropdownWrapper(imageItem, colorItem));
+        doInteractableChange(getDropdownWrapper(imageItem, colorItem));
     };
 
     const handleColorCorrection = (imageItem, colorName) => {
@@ -85,7 +91,7 @@ const Orchestrator = () => {
 
         const text = getColorCorrectionText(colorName);
         setTextToAnimate(text.body);
-        setInteractable(getAssertionButton(imageItem, text.buttons));
+        doInteractableChange(getAssertionButton(imageItem, text.buttons));
     }
 
     const getAssertionButton = (imageItem, buttonText) => {
@@ -106,8 +112,8 @@ const Orchestrator = () => {
                 <h2>{getRankQuoteText(botRank)}</h2>
             </div>
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
-            <TextAnimationWrapper textSourceArray={textToAnimate} />
-            {interactable}
+            <TextAnimationWrapper textSourceArray={textToAnimate} completionCallback={() => setInteractableVisible(true)} />
+            {interactableVisible ? interactable : <></>}
         </div>
     );
 };

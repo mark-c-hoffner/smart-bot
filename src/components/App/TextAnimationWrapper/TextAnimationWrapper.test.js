@@ -5,6 +5,7 @@ const typeAnimationMock = jest.fn();
 const TypeAnimationModuleMock = {
     TypeAnimation: typeAnimationMock
 };
+const callbackMock = jest.fn();
 
 describe('TextAnimationWrapper', () => {
 
@@ -23,7 +24,7 @@ describe('TextAnimationWrapper', () => {
     })
 
     it('renders without crashing', () => {
-        render(<TextAnimationWrapper textSourceArray={['testWelcomeMessage']} />);
+        render(<TextAnimationWrapper textSourceArray={[]} />);
     })
 
     it('calls the type animation library', () => {
@@ -54,5 +55,12 @@ describe('TextAnimationWrapper', () => {
         expect(typeAnimationMock.mock.calls[0][0].sequence[3]).toBe(500);
         expect(typeAnimationMock.mock.calls[0][0].sequence[4]).toBe("4\n5\n6\n");
         expect(typeAnimationMock.mock.calls[0][0].sequence[5]).toBe(500);
+    })
+
+    it('passes the callback to the type animation component', () => {
+        render(<TextAnimationWrapper textSourceArray={['1', '2', '3']} completionCallback={callbackMock} />);
+        expect(callbackMock).not.toHaveBeenCalled();
+        typeAnimationMock.mock.calls[0][0].sequence[6]();
+        expect(callbackMock).toHaveBeenCalledTimes(1);
     })
 })

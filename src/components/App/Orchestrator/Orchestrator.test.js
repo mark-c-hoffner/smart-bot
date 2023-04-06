@@ -75,6 +75,7 @@ describe('Orchestrator', () => {
 
     it('displays assertion text after user click', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
         await waitFor(() => {
             expect(getByText(`testAssertionText mock1`)).toBeTruthy();
@@ -83,6 +84,7 @@ describe('Orchestrator', () => {
 
     it('displays returned image after user click', async () => {
         const { getByText, getByAltText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
         await waitFor(() => {
             expect(getByAltText(`firstImageAlt`).src).toBe(`http://localhost/firstImageSource`);
@@ -91,7 +93,9 @@ describe('Orchestrator', () => {
 
     it('displays correct text after user click correct', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button2'));
         await waitFor(() => {
             expect(getByText(`testAnswerIsCorrectText mock1`)).toBeTruthy();
@@ -100,7 +104,9 @@ describe('Orchestrator', () => {
 
     it('calls update colors on correct', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button2'));
         expect(matchDataManagerMock.updateColors.mock.calls[0][0].id).toBe('id1');
         expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('mock1');
@@ -108,8 +114,11 @@ describe('Orchestrator', () => {
 
     it('displays new returned image on subsequent assertion', async () => {
         const { getByText, getByAltText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button2'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('answerIsCorrect button1'));
         await waitFor(() => {
             expect(getByAltText(`secondImageAlt`).src).toBe(`http://localhost/secondImageSource`);
@@ -118,7 +127,9 @@ describe('Orchestrator', () => {
 
     it('displays correct text after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
         await waitFor(() => {
             expect(getByText(/testWrongText/)).toBeTruthy();
@@ -127,8 +138,11 @@ describe('Orchestrator', () => {
 
     it('displays dropdown after user clicks wrong', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         await waitFor(() => {
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
         });
@@ -136,8 +150,11 @@ describe('Orchestrator', () => {
 
     it('displays correction text if dropdown selection is different from given', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
         await waitFor(() => {
             expect(getByText(/testCorrectionText dropdownValue/)).toBeTruthy();
@@ -146,8 +163,11 @@ describe('Orchestrator', () => {
 
     it('displays correction mistake text if dropdown selection is the same as given', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
         await waitFor(() => {
             expect(getByText(/testCorrectionMistakeText dropdownValue/)).toBeTruthy();
@@ -156,10 +176,15 @@ describe('Orchestrator', () => {
 
     it('displays dropdown and mistake text if user aborts different correction', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'dropdownValue' }));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('correction button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         await waitFor(() => {
             expect(getByText(/testMistakeText/)).toBeTruthy();
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
@@ -168,10 +193,15 @@ describe('Orchestrator', () => {
 
     it('displays dropdown and mistake text if user aborts same correction', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('correctionMistake button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         await waitFor(() => {
             expect(getByText(/testMistakeText/)).toBeTruthy();
             expect(getByText(/dropdownWrapperMock/)).toBeTruthy();
@@ -180,9 +210,13 @@ describe('Orchestrator', () => {
 
     it('displays color correction text with different correction', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'colorValue' }, { value: 'updatedColorName' }));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('correction button2'));
         await waitFor(() => {
             expect(getByText(/testColorCorrectionText updatedColorName/)).toBeTruthy();
@@ -193,9 +227,13 @@ describe('Orchestrator', () => {
 
     it('displays color correction text with same correction', async () => {
         const { getByText } = render(<Orchestrator />);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('welcome button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('assertion button1'));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         act(() => dropdownWrapperMock.mock.calls[0][0].handleDropdownChange({ item: '3' }, { name: 'dropdownValue' }, { value: 'dropdownValue' }));
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText('correctionMistake button2'));
         await waitFor(() => {
             expect(getByText(/testAnswerIsCorrectText dropdownValue/)).toBeTruthy();
