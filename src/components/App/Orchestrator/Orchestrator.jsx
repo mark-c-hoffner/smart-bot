@@ -13,6 +13,7 @@ import ButtonWrapper from "../ButtonWrapper";
 const Orchestrator = () => {
     const [textToAnimate, setTextToAnimate] = useState([]);
     const [interactable, setInteractable] = useState();
+    const [imageDisplayItem, setImageDisplayItem] = useState({});
 
     useEffect(() => {
         const text = getWelcomeText();
@@ -24,7 +25,8 @@ const Orchestrator = () => {
         const imageItem = getRandomImageItem(lastImageItem);
         const colorItem = getColorItemFromImage(imageItem);
 
-        const text = getAssertionText(imageItem.item, colorItem.name);
+        setImageDisplayItem(imageItem);
+        const text = getAssertionText(colorItem.name);
         setTextToAnimate(text.body);
         setInteractable(
             getButtonWrapper([
@@ -37,20 +39,20 @@ const Orchestrator = () => {
     const handleCorrect = (imageItem, colorName) => {
         updateColors(imageItem, colorName);
 
-        const text = getAnswerIsCorrectText(imageItem.item, colorName);
+        const text = getAnswerIsCorrectText(colorName);
         setTextToAnimate(text.body);
         setInteractable(getAssertionButton(imageItem, text.buttons));
     }
 
     const handleWrong = (imageItem, colorItem) => {
-        const text = getWrongText(imageItem.item);
+        const text = getWrongText();
         setTextToAnimate(text.body);
         setInteractable(getDropdownWrapper(imageItem, colorItem));
     }
 
     const handleDropdownChange = (imageItem, colorItem, e) => {
         if (colorItem.name != e.value) {
-            const text = getCorrectionText(imageItem.item, e.value);
+            const text = getCorrectionText(e.value);
             setTextToAnimate(text.body);
             setInteractable(
                 getButtonWrapper([
@@ -59,7 +61,7 @@ const Orchestrator = () => {
                 ])
             );
         } else {
-            const text = getCorrectionMistakeText(imageItem.item, e.value);
+            const text = getCorrectionMistakeText(e.value);
             setTextToAnimate(text.body);
             setInteractable(
                 getButtonWrapper([
@@ -71,7 +73,7 @@ const Orchestrator = () => {
     };
 
     const handleTryAgain = (imageItem, colorItem) => {
-        const text = getMistakeText(imageItem.item);
+        const text = getMistakeText();
         setTextToAnimate(text.body);
         setInteractable(getDropdownWrapper(imageItem, colorItem));
     };
@@ -79,13 +81,13 @@ const Orchestrator = () => {
     const handleColorCorrection = (imageItem, colorName) => {
         updateColors(imageItem, colorName);
 
-        const text = getColorCorrectionText(imageItem.item, colorName);
+        const text = getColorCorrectionText(colorName);
         setTextToAnimate(text.body);
         setInteractable(getAssertionButton(imageItem, text.buttons));
     }
 
     const getAssertionButton = (imageItem, buttonText) => {
-        return getButtonWrapper([{ action: () => getAnAssertion(imageItem), text: buttonText[0]}]);
+        return getButtonWrapper([{ action: () => getAnAssertion(imageItem), text: buttonText[0] }]);
     }
 
     const getDropdownWrapper = (imageItem, colorItem) => {
@@ -98,6 +100,7 @@ const Orchestrator = () => {
 
     return (
         <div>
+            <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
             <TextAnimationWrapper textSourceArray={textToAnimate} />
             {interactable}
         </div>

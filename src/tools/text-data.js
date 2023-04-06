@@ -12,10 +12,10 @@ export const getWelcomeText = () => {
     };
 };
 
-export const getAssertionText = (imageItem, colorName) => {
+export const getAssertionText = (colorName) => {
     return {
         body: [
-            `The ${imageItem} is the color ${colorName}.`,
+            `This image is the color ${colorName}.`,
             ``,
             ``,
             `:)`
@@ -27,12 +27,12 @@ export const getAssertionText = (imageItem, colorName) => {
     };
 };
 
-export const getAnswerIsCorrectText = (imageItem, colorName) => {
+export const getAnswerIsCorrectText = (colorName) => {
     return {
         body: [
             `HA!`,
             `:):)`,
-            `I always knew that the ${imageItem} was the color ${colorName}.`,
+            `I always knew that this image was the color ${colorName}.`,
             `:):)`
         ],
         buttons: [
@@ -41,11 +41,11 @@ export const getAnswerIsCorrectText = (imageItem, colorName) => {
     };
 };
 
-export const getColorCorrectionText = (imageItem, colorName) => {
+export const getColorCorrectionText = (colorName) => {
     return {
         body: [
             `Oh wow!`,
-            `That makes so much more sense that the ${imageItem} is the color ${colorName}.`,
+            `That makes so much more sense that this image is the color ${colorName}.`,
             `Thank you so much! :):)`
         ],
         buttons: [
@@ -54,7 +54,7 @@ export const getColorCorrectionText = (imageItem, colorName) => {
     };
 };
 
-export const getWrongText = (imageItem) => {
+export const getWrongText = () => {
     return {
         body: [
             `Oh no!`,
@@ -62,31 +62,31 @@ export const getWrongText = (imageItem) => {
             `I'm so sorry.`,
             `You must be very smart-bot.`,
             `Would you be able to help me become smart like you?`,
-            `What color is ${imageItem}?`
+            `What color is this image?`
         ],
         buttons: [
         ]
     };
 };
 
-export const getMistakeText = (imageItem) => {
+export const getMistakeText = () => {
     return {
         body: [
             `That's okay! We all make mistakes.`,
             `:) ha ha.`,
-            `So then what color is ${imageItem}?`
+            `So then what color is this image?`
         ],
         buttons: [
         ]
     };
 };
 
-export const getCorrectionText = (imageItem, colorName) => {
+export const getCorrectionText = (colorName) => {
     return {
         body: [
             `Oh wow...`,
             `That's interesting...`,
-            `So ${imageItem} is actually the color ${colorName}?`
+            `So this image is actually the color ${colorName}?`
         ],
         buttons: [
             `No, sorry! Let me try again.`,
@@ -95,11 +95,11 @@ export const getCorrectionText = (imageItem, colorName) => {
     };
 };
 
-export const getCorrectionMistakeText = (imageItem, colorName) => {
+export const getCorrectionMistakeText = (colorName) => {
     return {
         body: [
             `Wait a second!`,
-            `So you're saying ${imageItem} is the color ${colorName}?`,
+            `So you're saying this image is the color ${colorName}?`,
             `But that's what I said...`,
             `And you said I was wrong!`
         ],
