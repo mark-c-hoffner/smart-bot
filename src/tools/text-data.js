@@ -1,9 +1,26 @@
-export const getWelcomeText = () => {
+export const getAvailableRankings = () => [
+    "sixth",
+    "seventh",
+    "sixteenth",
+    "seventeenth",
+    "six hundredth",
+    "seven hundredth"
+];
+
+export const getRankQuoteText = (botRank) => {
+    return `"The ${botRank} smartest bot on the web."`;
+};
+
+export const getWelcomeText = (botRank) => {
     return {
         body: [
-            `Hi there! :):)`,
+            `Hi there!`,
+            `:)`,
             `I'm smart-bot.`,
-            `Not to toot my own horn, but some say I'm the smartest bot on the web.`,
+            ``,
+            `Not to toot my own horn, but some say I'm the "${botRank} smartest bot on the web."`,
+            `:):)`,
+            ``,
             `Do you want to see what I know?`
         ],
         buttons: [

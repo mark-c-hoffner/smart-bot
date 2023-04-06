@@ -30,7 +30,6 @@ describe('App', () => {
     it('displays the text', () => {
         const { getByText } = render(<App />);
         expect(getByText('smart-bot')).toBeTruthy();
-        expect(getByText('The smartest bot on the web.')).toBeTruthy();
     })
 
     it('renders Orchestrator component', () => {

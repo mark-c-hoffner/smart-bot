@@ -7,7 +7,6 @@ const matchDataManagerMock = {
     updateColors: jest.fn(),
     getAllColorOptions: jest.fn()
 };
-
 const textDataMock = {
     getWelcomeText: jest.fn(),
     getAnswerIsCorrectText: jest.fn(),
@@ -16,7 +15,8 @@ const textDataMock = {
     getMistakeText: jest.fn(),
     getCorrectionText: jest.fn(),
     getCorrectionMistakeText: jest.fn(),
-    getAssertionText: jest.fn()
+    getAssertionText: jest.fn(),
+    getRankQuoteText: jest.fn()
 };
 
 const textAnimationWrapperMock = jest.fn();
@@ -29,14 +29,16 @@ describe('Orchestrator', () => {
     beforeEach(async () => {
         jest.doMock('../../../tools/matchDataManager', () => matchDataManagerMock)
         jest.doMock('../../../tools/text-data', () => textDataMock)
+        jest.doMock('../../../tools/rank-getter', () => "mockRank")
+
         jest.doMock('../TextAnimationWrapper', () => textAnimationWrapperMock)
         jest.doMock('../DropdownWrapper', () => dropdownWrapperMock)
 
-        matchDataManagerMock.getRandomImageItem.mockReturnValueOnce({ id: "id1", source: "firstImageSource", alt: "firstImageAlt"}).mockReturnValue({ id: "id2", source: "secondImageSource", alt: "secondImageAlt"});
+        matchDataManagerMock.getRandomImageItem.mockReturnValueOnce({ id: "id1", source: "firstImageSource", alt: "firstImageAlt" }).mockReturnValue({ id: "id2", source: "secondImageSource", alt: "secondImageAlt" });
         matchDataManagerMock.getColorItemFromImage.mockReturnValue({ name: "mock1", match: "id1" });
         matchDataManagerMock.getAllColorOptions.mockReturnValue('mockAllColorOptions');
 
-        textDataMock.getWelcomeText.mockImplementation(() => { return { body: `testWelcomeMessage`, buttons: [`welcome button1`] } });
+        textDataMock.getWelcomeText.mockImplementation((data1) => { return { body: `testWelcomeMessage ${data1}`, buttons: [`welcome button1`] } });
         textDataMock.getAssertionText.mockImplementation((data1) => { return { body: `testAssertionText ${data1}`, buttons: [`assertion button1`, `assertion button2`] } });
         textDataMock.getAnswerIsCorrectText.mockImplementation((data1) => { return { body: `testAnswerIsCorrectText ${data1}`, buttons: [`answerIsCorrect button1`] } });
         textDataMock.getWrongText.mockImplementation(() => { return { body: `testWrongText`, buttons: [] } });
@@ -44,6 +46,7 @@ describe('Orchestrator', () => {
         textDataMock.getCorrectionMistakeText.mockImplementation((data1) => { return { body: `testCorrectionMistakeText ${data1}`, buttons: [`correctionMistake button1`, `correctionMistake button2`] } });
         textDataMock.getColorCorrectionText.mockImplementation((data1) => { return { body: `testColorCorrectionText ${data1}`, buttons: [`colorCorrection button1`, `colorCorrection button2`] } });
         textDataMock.getMistakeText.mockImplementation(() => { return { body: `testMistakeText`, buttons: [] } });
+        textDataMock.getRankQuoteText.mockImplementation((data1) => { return `rankQuoteText ${data1}` });
 
         textAnimationWrapperMock.mockImplementation(({ textSourceArray }) => <>{textSourceArray}</>);
         dropdownWrapperMock.mockReturnValue(<>dropdownWrapperMock</>);
@@ -60,9 +63,14 @@ describe('Orchestrator', () => {
         render(<Orchestrator />);
     })
 
+    it('displays the rank quote', () => {
+        const { getByText } = render(<Orchestrator />);
+        expect(getByText('rankQuoteText mockRank')).toBeTruthy();
+    })
+
     it('displays welcome text', () => {
         const { getByText } = render(<Orchestrator />);
-        expect(getByText('testWelcomeMessage')).toBeTruthy();
+        expect(getByText('testWelcomeMessage mockRank')).toBeTruthy();
     })
 
     it('displays assertion text after user click', async () => {

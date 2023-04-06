@@ -17,7 +17,6 @@ const App = () => {
             </Helmet>
             <div className="centered" data-testid="title">
                 <h1>smart-bot</h1>
-                <h2>The smartest bot on the web.</h2>
             </div>
             <Orchestrator />
         </div >

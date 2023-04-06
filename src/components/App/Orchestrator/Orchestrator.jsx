@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOptions } from "../../../tools/matchDataManager";
-import { getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
+import { getRankQuoteText, getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
+import botRank from "../../../tools/rank-getter";
+
 import TextAnimationWrapper from "../TextAnimationWrapper";
 import DropdownWrapper from "../DropdownWrapper";
 import ButtonWrapper from "../ButtonWrapper";
@@ -16,7 +18,7 @@ const Orchestrator = () => {
     const [imageDisplayItem, setImageDisplayItem] = useState({});
 
     useEffect(() => {
-        const text = getWelcomeText();
+        const text = getWelcomeText(botRank);
         setTextToAnimate(text.body);
         setInteractable(getButtonWrapper([{ action: () => getAnAssertion(null), text: text.buttons[0] }]));
     }, []);
@@ -25,7 +27,6 @@ const Orchestrator = () => {
         const imageItem = getRandomImageItem(lastImageItem);
         const colorItem = getColorItemFromImage(imageItem);
 
-        setImageDisplayItem(imageItem);
         const text = getAssertionText(colorItem.name);
         setTextToAnimate(text.body);
         setInteractable(
@@ -34,6 +35,7 @@ const Orchestrator = () => {
                 { action: () => handleCorrect(imageItem, colorItem.name), text: text.buttons[1] }
             ])
         );
+        setImageDisplayItem(imageItem);
     }
 
     const handleCorrect = (imageItem, colorName) => {
@@ -100,6 +102,9 @@ const Orchestrator = () => {
 
     return (
         <div>
+            <div className="centered">
+                <h2>{getRankQuoteText(botRank)}</h2>
+            </div>
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
             <TextAnimationWrapper textSourceArray={textToAnimate} />
             {interactable}
