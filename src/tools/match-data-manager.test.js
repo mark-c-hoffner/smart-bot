@@ -2,14 +2,14 @@ const randomMock = jest.fn();
 const matchDataMock = [];
 const imageDataMock = [];
 
-describe('matchDataManager.js', () => {
+describe('match-data-manager.js', () => {
 
     let obj;
 
     beforeEach(async () => {
         jest.doMock('./random', () => randomMock)
-        jest.doMock('./matchData', () => matchDataMock)
-        jest.doMock('./imageData', () => imageDataMock)
+        jest.doMock('./match-data', () => matchDataMock)
+        jest.doMock('./image-data', () => imageDataMock)
 
         matchDataMock[0] = { name: "mock2", match: "none" };
         matchDataMock[1] = { name: "mock3", match: "id3" };
@@ -18,7 +18,7 @@ describe('matchDataManager.js', () => {
         imageDataMock[1] = { item: "2", id: "id3" };
         imageDataMock[2] = { item: "1", id: "id5" };
 
-        obj = await import('./matchDataManager.js');
+        obj = await import('./match-data-manager.js');
         obj.resetMatchData();
     })
 

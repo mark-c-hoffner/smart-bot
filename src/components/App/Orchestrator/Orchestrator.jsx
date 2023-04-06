@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOptions } from "../../../tools/matchDataManager";
+import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOptions } from "../../../tools/match-data-manager";
 import { getRankQuoteText, getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
 import botRank from "../../../tools/rank-getter";
 

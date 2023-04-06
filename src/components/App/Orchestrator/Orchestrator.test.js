@@ -27,7 +27,7 @@ describe('Orchestrator', () => {
     let Orchestrator;
 
     beforeEach(async () => {
-        jest.doMock('../../../tools/matchDataManager', () => matchDataManagerMock)
+        jest.doMock('../../../tools/match-data-manager', () => matchDataManagerMock)
         jest.doMock('../../../tools/text-data', () => textDataMock)
         jest.doMock('../../../tools/rank-getter', () => "mockRank")
 
