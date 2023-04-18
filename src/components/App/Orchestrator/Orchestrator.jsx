@@ -4,6 +4,7 @@ import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOpt
 import { getRankQuoteText, getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
 import botRank from "../../../tools/rank-getter";
 
+import BotHead from "../BotHead";
 import TextAnimationWrapper from "../TextAnimationWrapper";
 import DropdownWrapper from "../DropdownWrapper";
 import ButtonWrapper from "../ButtonWrapper";
@@ -111,6 +112,7 @@ const Orchestrator = () => {
             <div className="centered">
                 <h2>{getRankQuoteText(botRank)}</h2>
             </div>
+            <BotHead />
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
             <TextAnimationWrapper textSourceArray={textToAnimate} completionCallback={() => setInteractableVisible(true)} />
             {interactableVisible ? interactable : <></>}
