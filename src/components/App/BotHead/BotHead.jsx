@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import "./head-layout.css"
 
+import BotEyes from "./BotEyes";
 import headSrc from "../../../assets/images/bot/head-empty.png";
-import leftEyeSrc from "../../../assets/images/bot/eye-left-open.png";
-import rightEyeSrc from "../../../assets/images/bot/eye-right-open.png";
 import mouthSrc from "../../../assets/images/bot/mouth-open.png";
 
 /**
@@ -34,8 +33,7 @@ const BotHead = ({ isAnimatingMouth }) => {
             }}
         >
             <div className="grid-layout">
-                <img className={"leftEye"} src={leftEyeSrc} />
-                <img className={"rightEye"} src={rightEyeSrc} />
+                <BotEyes />
                 <img className={"mouth"} src={mouthSrc} />
             </div>
             <img data-testid="head-image" onLoad={handleImageLoad} src={headSrc} />

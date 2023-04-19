@@ -1,11 +1,17 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
+const botEyesMock = jest.fn();
+
 describe('BotHead', () => {
 
     let BotHead;
 
     beforeEach(async () => {
+        jest.doMock('./BotEyes', () => botEyesMock)
+
+        botEyesMock.mockReturnValue(<>botEyesMock</>);
+
         const obj = await import('./BotHead.jsx');
         BotHead = obj.default;
     });
@@ -17,6 +23,11 @@ describe('BotHead', () => {
     it('renders without crashing', () => {
         render(<BotHead />);
     });
+
+    it('displays botEyes', () => {
+        const { getByText } = render(<BotHead />);
+        expect(getByText(/botEyesMock/)).toBeTruthy();
+    })
 
     it('starts the grid-container invisible', () => {
         const { getByTestId } = render(<BotHead />);
