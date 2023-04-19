@@ -1,6 +1,6 @@
 import random from "./random";
 import matchDataSeed from "./match-data";
-import imageData from "./image-data";
+import imageData from "./color-image-data";
 
 let matchData = matchDataSeed;
 

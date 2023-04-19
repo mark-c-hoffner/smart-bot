@@ -9,7 +9,7 @@ describe('match-data-manager.js', () => {
     beforeEach(async () => {
         jest.doMock('./random', () => randomMock)
         jest.doMock('./match-data', () => matchDataMock)
-        jest.doMock('./image-data', () => imageDataMock)
+        jest.doMock('./color-image-data', () => imageDataMock)
 
         matchDataMock[0] = { name: "mock2", match: "none" };
         matchDataMock[1] = { name: "mock3", match: "id3" };
