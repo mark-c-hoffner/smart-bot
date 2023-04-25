@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
 const botEyesMock = jest.fn();
+const botMouthMock = jest.fn();
 
 describe('BotHead', () => {
 
@@ -9,8 +10,10 @@ describe('BotHead', () => {
 
     beforeEach(async () => {
         jest.doMock('./BotEyes', () => botEyesMock)
+        jest.doMock('./BotMouth', () => botMouthMock)
 
         botEyesMock.mockReturnValue(<>botEyesMock</>);
+        botMouthMock.mockReturnValue(<>botMouthMock</>);
 
         const obj = await import('./BotHead.jsx');
         BotHead = obj.default;
@@ -27,6 +30,12 @@ describe('BotHead', () => {
     it('displays botEyes', () => {
         const { getByText } = render(<BotHead />);
         expect(getByText(/botEyesMock/)).toBeTruthy();
+    })
+
+    it('displays botMouth and passes prop', () => {
+        const { getByText } = render(<BotHead isAnimatingMouth={true}/>);
+        expect(getByText(/botMouthMock/)).toBeTruthy();
+        expect(botMouthMock.mock.lastCall[0].isAnimatingMouth).toBe(true);
     })
 
     it('starts the grid-container invisible', () => {

@@ -81,6 +81,15 @@ describe('Orchestrator', () => {
         expect(getByText(/botHeadMock/)).toBeTruthy();
     })
 
+    it('updates isAnimatingMouth from text animation wrapper callbacks', () => {
+        render(<Orchestrator />);
+        expect(botHeadMock.mock.calls[0][0].isAnimatingMouth).toBe(false);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].textStartCallback());
+        expect(botHeadMock.mock.lastCall[0].isAnimatingMouth).toBe(true);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].textStopCallback());
+        expect(botHeadMock.mock.lastCall[0].isAnimatingMouth).toBe(false);
+    })
+
     it('displays assertion text after user click', async () => {
         const { getByText } = render(<Orchestrator />);
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());

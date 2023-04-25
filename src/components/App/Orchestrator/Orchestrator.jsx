@@ -18,6 +18,7 @@ const Orchestrator = () => {
     const [interactable, setInteractable] = useState();
     const [imageDisplayItem, setImageDisplayItem] = useState({});
     const [interactableVisible, setInteractableVisible] = useState(false);
+    const [isAnimatingMouth, setIsAnimatingMouth] = useState(false);
 
     useEffect(() => {
         const text = getWelcomeText(botRank);
@@ -107,14 +108,26 @@ const Orchestrator = () => {
         return <ButtonWrapper buttonDefinitions={data} />;
     }
 
+    const textAnimationCompletionCallback = () => {
+        setInteractableVisible(true);
+    }
+
+    const textStartCallback = () => {
+        setIsAnimatingMouth(true);
+    }
+
+    const textStopCallback = () => {
+        setIsAnimatingMouth(false);
+    }
+
     return (
         <div>
             <div className="centered">
                 <h2>{getRankQuoteText(botRank)}</h2>
             </div>
-            <BotHead />
+            <BotHead isAnimatingMouth={isAnimatingMouth} />
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
-            <TextAnimationWrapper textSourceArray={textToAnimate} completionCallback={() => setInteractableVisible(true)} />
+            <TextAnimationWrapper textSourceArray={textToAnimate} textStartCallback={textStartCallback} textStopCallback={textStopCallback} completionCallback={textAnimationCompletionCallback} />
             {interactableVisible ? interactable : <></>}
         </div>
     );

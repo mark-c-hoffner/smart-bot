@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "./head-layout.css"
 
 import BotEyes from "./BotEyes";
+import BotMouth from "./BotMouth";
 import headSrc from "../../../assets/images/bot/head-empty.png";
-import mouthSrc from "../../../assets/images/bot/mouth-open.png";
 
 /**
  * React Function Component displays and animates the smart-bot image.
@@ -34,7 +34,7 @@ const BotHead = ({ isAnimatingMouth }) => {
         >
             <div className="grid-layout">
                 <BotEyes />
-                <img className={"mouth"} src={mouthSrc} />
+                <BotMouth isAnimatingMouth={isAnimatingMouth} />
             </div>
             <img data-testid="head-image" onLoad={handleImageLoad} src={headSrc} />
         </div >
