@@ -1,4 +1,5 @@
 import React from "react";
+import "./button-wrapper.css";
 
 /**
  * React Function Component wraps a number of buttons.
@@ -9,7 +10,7 @@ const ButtonWrapper = ({ buttonDefinitions }) => {
 
     const getButtons = () => {
         return buttonDefinitions.map((e, index) =>
-            <button key={index} onClick={e.action}>{e.text}</button>
+            <button className="convo-choice" key={index} onClick={e.action}>{e.text}</button>
         )
     };
 
