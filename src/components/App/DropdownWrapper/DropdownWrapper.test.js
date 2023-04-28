@@ -52,7 +52,7 @@ describe('DropdownWrapper', () => {
             expect(getByText('color1')).toBeTruthy();
         });
         expect(handleDropdownChangeMock).not.toHaveBeenCalled();
-        fireEvent.mouseDown(getByText('color1'))
+        fireEvent.click(getByText('color1'))
         expect(handleDropdownChangeMock.mock.calls[0][0]).toBe(imageItemMock);
         expect(handleDropdownChangeMock.mock.calls[0][1]).toBe(colorItemMock);
         expect(handleDropdownChangeMock.mock.calls[0][2].value).toBe('color1');

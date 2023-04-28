@@ -1,6 +1,5 @@
 import React from "react";
-import Dropdown from "react-dropdown";
-import 'react-dropdown/style.css';
+import Select from "react-select";
 
 /**
  * React Function Component wraps the dropdown library and prepares color list for dropdown display.
@@ -24,7 +23,7 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
     };
 
     return (
-        <Dropdown options={getDropdownDisplayItems(colors)} onChange={e => handleDropdownChange(imageItem, colorItem, e)} value={colorItem.name} />
+        <Select options={getDropdownDisplayItems(colors)} onChange={e => handleDropdownChange(imageItem, colorItem, e)} placeholder={colorItem.name} />
     );
 };
 

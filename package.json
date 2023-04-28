@@ -46,8 +46,8 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-dropdown": "^1.11.0",
     "react-helmet": "^6.1.0",
+    "react-select": "^5.7.2",
     "react-text-typist": "^1.1.7",
     "react-type-animation": "^2.1.2"
   }
