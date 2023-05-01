@@ -1,0 +1,7 @@
+.dropdown-container {
+    max-width: 23em;
+}
+
+.dropdown-container:hover {
+    transform: scale(1.05);
+}
