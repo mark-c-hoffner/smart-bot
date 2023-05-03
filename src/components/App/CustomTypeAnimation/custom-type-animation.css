@@ -1,0 +1,15 @@
+@keyframes blink {
+  0% {
+    opacity: 0%;
+  }
+}
+
+.type-writer::after {
+  content: "|";
+  animation: blink 1s steps(2) infinite;
+}
+
+.type-writer {
+  font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace;
+  font-weight: bold;
+}

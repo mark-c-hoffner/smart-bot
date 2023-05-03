@@ -19,6 +19,7 @@ const Orchestrator = () => {
     const [imageDisplayItem, setImageDisplayItem] = useState({});
     const [interactableVisible, setInteractableVisible] = useState(false);
     const [isAnimatingMouth, setIsAnimatingMouth] = useState(false);
+    const [isTypingAnimationSkippable, setIsTypingAnimationSkippable] = useState(false);
 
     useEffect(() => {
         const text = getWelcomeText(botRank);
@@ -27,6 +28,7 @@ const Orchestrator = () => {
     }, []);
 
     const doInteractableChange = (interactable) => {
+        setIsTypingAnimationSkippable(true);
         setInteractableVisible(false);
         setInteractable(interactable);
     }
@@ -110,6 +112,7 @@ const Orchestrator = () => {
 
     const textAnimationCompletionCallback = () => {
         setInteractableVisible(true);
+        setIsTypingAnimationSkippable(false);
     }
 
     const textStartCallback = () => {
@@ -127,7 +130,13 @@ const Orchestrator = () => {
             </div>
             <BotHead isAnimatingMouth={isAnimatingMouth} />
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
-            <TextAnimationWrapper textSourceArray={textToAnimate} textStartCallback={textStartCallback} textStopCallback={textStopCallback} completionCallback={textAnimationCompletionCallback} />
+            <TextAnimationWrapper
+                textSourceArray={textToAnimate}
+                textStartCallback={textStartCallback}
+                textStopCallback={textStopCallback}
+                completionCallback={textAnimationCompletionCallback}
+                isSkippable={isTypingAnimationSkippable}
+            />
             {interactableVisible ? interactable : <></>}
         </div>
     );

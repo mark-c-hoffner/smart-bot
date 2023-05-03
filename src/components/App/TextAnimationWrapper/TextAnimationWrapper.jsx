@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TypeAnimation } from 'react-type-animation';
+import CustomTypeAnimation from "../CustomTypeAnimation";
 
 /**
  * React Function Component wraps TextAnimation library.
@@ -7,46 +7,65 @@ import { TypeAnimation } from 'react-type-animation';
  * @param {Function} textStartCallback - Function called before a line of text start.
  * @param {Function} textStopCallback - Function called after a line of text ends.
  * @param {Function} completionCallback - Function called when type animation is completed.
+ * @param {Boolean} isSkippable - Whether the typing animation is currently in a skippable state.
  * @returns {JSX.Element} - A React Component instance.
  */
-const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCallback, completionCallback }) => {
-    const [animationComponent, setAnimationComponent] = useState();
+const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCallback, completionCallback, isSkippable }) => {
+    const [editedArray, setEditedArray] = useState(null);
+    const [shouldSkip, setShouldSkip] = useState(false);
 
-    //Because TypeAnimation is memoized, changing sequence state does not cause a rerender. Making TypeAnimation null for a frame forces rerender. 
     useEffect(() => {
-        setAnimationComponent(null);
+        setShouldSkip(false);
+    }, [isSkippable]);
+
+    useEffect(() => {
+        setEditedArray(prepTextForAnimation(textSourceArray))
     }, [textSourceArray]);
 
-    useEffect(() => {
-        if (animationComponent == null) {
-            setAnimationComponent(<TypeAnimation wrapper="span" style={{ whiteSpace: "pre-line" }} sequence={prepTextForAnimation(textSourceArray)} />);
-        }
-    }, [animationComponent]);
+    const triggerTypingSkip = () => {
+        if (isSkippable) {
+            setShouldSkip(true);
+            textStopCallback();
+            completionCallback();
+        };
+    };
 
-    const animationDelay = 500;
+    const defaultNewLineDelay = 500;
+
     const prepTextForAnimation = (array) => {
         const newArray = [];
         if (array.length != 0) {
-            let concatString = '';
             array.forEach(e => {
                 if (e != '' && e != ':)' & e != ':):)') {
                     newArray.push(textStartCallback)
                 }
-                concatString = concatString.concat(e, '\n');
-                newArray.push(concatString)
+                newArray.push(e + '\n')
                 newArray.push(textStopCallback)
-                newArray.push(animationDelay)
+                newArray.push(defaultNewLineDelay)
             });
             newArray.push(completionCallback);
-        }
+        };
         return newArray;
     };
 
     return (
-        <div className="TextAnimationWrapper">
-            {animationComponent}
+        <div
+            className="TextAnimationWrapper"
+            data-testid="text-animation-wrapper"
+            onClick={triggerTypingSkip}
+            style={{
+                minHeight: "10em",
+                cursor: isSkippable ? "progress" : "default",
+                WebkitTouchCallout: "none",
+                WebkitUserSelect: "none",
+                MozUserSelect: "none",
+                msUserSelect: "none",
+                userSelect: "none",
+            }}
+        >
+            <CustomTypeAnimation sequence={editedArray} shouldSkip={shouldSkip} delayBetweenTyping={40} />
         </div >
-    )
-}
+    );
+};
 
 export default TextAnimationWrapper;

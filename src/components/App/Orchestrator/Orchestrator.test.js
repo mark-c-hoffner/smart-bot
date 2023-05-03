@@ -258,4 +258,18 @@ describe('Orchestrator', () => {
             expect(matchDataManagerMock.updateColors.mock.calls[0][1]).toBe('dropdownValue');
         });
     })
+
+    it('hides buttons until completion callback is called', () => {
+        const { queryByText } = render(<Orchestrator />);
+        expect(queryByText(/welcome button1/)).toBeFalsy();
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
+        expect(queryByText(/welcome button1/)).toBeTruthy();
+    })
+
+    it('updates animation is skippable when completion callback is called', () => {
+        render(<Orchestrator />);
+        expect(textAnimationWrapperMock.mock.lastCall[0].isSkippable).toBe(true);
+        act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
+        expect(textAnimationWrapperMock.mock.lastCall[0].isSkippable).toBe(false);
+    })
 })
