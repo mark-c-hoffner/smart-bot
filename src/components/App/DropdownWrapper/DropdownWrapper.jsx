@@ -37,7 +37,7 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
             background: "radial-gradient(rgb(255, 255, 255), #161616)",
             minHeight: "0px",
             height: "2.1em",
-            paddingBottom: "0px",
+            paddingBottom: "0px"
         }),
         placeholder: (baseStyles, state) => ({
             ...baseStyles,
@@ -57,15 +57,16 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
         }),
         menu: (baseStyles, state) => ({
             ...baseStyles,
-            backgroundColor: rgb(50, 50, 50),
+            backgroundColor: rgb(22, 22, 22),
             color: rgb(230, 230, 230),
+            marginTop: "0%"
         }),
         option: (baseStyles, state) => ({
             ...baseStyles,
             cursor: "pointer",
             backgroundColor: state.isFocused ? rgb(60, 60, 60) : rgb(50, 50, 50),
             color: state.isFocused ? rgb(255, 255, 255) : rgb(230, 230, 230),
-            fontSize: state.isFocused ? '1.1em': '1em'
+            fontSize: state.isFocused ? '1.1em' : '1em'
         }),
     }
 
