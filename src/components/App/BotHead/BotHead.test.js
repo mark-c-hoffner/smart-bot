@@ -27,9 +27,10 @@ describe('BotHead', () => {
         render(<BotHead />);
     });
 
-    it('displays botEyes', () => {
-        const { getByText } = render(<BotHead />);
+    it('displays botEyes and passes prop', () => {
+        const { getByText } = render(<BotHead bootupCompletionCallback={"bootupCompletionCallback"}/>);
         expect(getByText(/botEyesMock/)).toBeTruthy();
+        expect(botEyesMock.mock.lastCall[0].bootupCompletionCallback).toBe("bootupCompletionCallback");
     })
 
     it('displays botMouth and passes prop', () => {

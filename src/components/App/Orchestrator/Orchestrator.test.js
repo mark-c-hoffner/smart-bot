@@ -25,6 +25,12 @@ const dropdownWrapperMock = jest.fn();
 
 describe('Orchestrator', () => {
 
+    const bootupCompletionHelper = async () => {
+        const i = render(<Orchestrator />);
+        await act(() => botHeadMock.mock.lastCall[0].bootupCompletionCallback());
+        return i;
+    }
+
     let Orchestrator;
 
     beforeEach(async () => {
@@ -71,11 +77,6 @@ describe('Orchestrator', () => {
         expect(getByText(/rankQuoteText mockRank/)).toBeTruthy();
     })
 
-    it('displays welcome text', () => {
-        const { getByText } = render(<Orchestrator />);
-        expect(getByText(/testWelcomeMessage mockRank/)).toBeTruthy();
-    })
-
     it('displays bothead', () => {
         const { getByText } = render(<Orchestrator />);
         expect(getByText(/botHeadMock/)).toBeTruthy();
@@ -90,8 +91,15 @@ describe('Orchestrator', () => {
         expect(botHeadMock.mock.lastCall[0].isAnimatingMouth).toBe(false);
     })
 
+    it('does not display welcome message until boot callback is called', async () => {
+        const { queryByText, getByText } = render(<Orchestrator />);
+        expect(queryByText(/testWelcomeMessage mockRank/)).toBeFalsy();
+        await act(() => botHeadMock.mock.lastCall[0].bootupCompletionCallback());
+        expect(getByText(/testWelcomeMessage mockRank/)).toBeTruthy();
+    })
+
     it('displays assertion text after user click', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         await waitFor(() => {
@@ -100,7 +108,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays returned image after user click', async () => {
-        const { getByText, getByAltText } = render(<Orchestrator />);
+        const { getByText, getByAltText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         await waitFor(() => {
@@ -109,7 +117,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays correct text after user click correct', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -120,7 +128,7 @@ describe('Orchestrator', () => {
     })
 
     it('calls update colors on correct', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -130,7 +138,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays new returned image on subsequent assertion', async () => {
-        const { getByText, getByAltText } = render(<Orchestrator />);
+        const { getByText, getByAltText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -143,7 +151,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays correct text after user clicks wrong', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -154,7 +162,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays dropdown after user clicks wrong', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -166,7 +174,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays correction text if dropdown selection is different from given', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -179,7 +187,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays correction mistake text if dropdown selection is the same as given', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -192,7 +200,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays dropdown and mistake text if user aborts different correction', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -209,7 +217,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays dropdown and mistake text if user aborts same correction', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -226,7 +234,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays color correction text with different correction', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -243,7 +251,7 @@ describe('Orchestrator', () => {
     })
 
     it('displays color correction text with same correction', async () => {
-        const { getByText } = render(<Orchestrator />);
+        const { getByText } = await bootupCompletionHelper();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         fireEvent.click(getByText(/welcome button1/));
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
@@ -259,15 +267,15 @@ describe('Orchestrator', () => {
         });
     })
 
-    it('hides buttons until completion callback is called', () => {
-        const { queryByText } = render(<Orchestrator />);
+    it('hides buttons until completion callback is called', async () => {
+        const { queryByText } = await bootupCompletionHelper();
         expect(queryByText(/welcome button1/)).toBeFalsy();
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         expect(queryByText(/welcome button1/)).toBeTruthy();
     })
 
-    it('updates animation is skippable when completion callback is called', () => {
-        render(<Orchestrator />);
+    it('updates animation is skippable when completion callback is called', async () => {
+        await bootupCompletionHelper();
         expect(textAnimationWrapperMock.mock.lastCall[0].isSkippable).toBe(true);
         act(() => textAnimationWrapperMock.mock.lastCall[0].completionCallback());
         expect(textAnimationWrapperMock.mock.lastCall[0].isSkippable).toBe(false);

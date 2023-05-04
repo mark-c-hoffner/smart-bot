@@ -21,11 +21,11 @@ const Orchestrator = () => {
     const [isAnimatingMouth, setIsAnimatingMouth] = useState(false);
     const [isTypingAnimationSkippable, setIsTypingAnimationSkippable] = useState(false);
 
-    useEffect(() => {
+    const bootupCompletionCallback = () => {
         const text = getWelcomeText(botRank);
         setTextToAnimate(text.body);
         doInteractableChange(getButtonWrapper([{ action: () => getAnAssertion(null), text: text.buttons[0] }]));
-    }, []);
+    };
 
     const doInteractableChange = (interactable) => {
         setIsTypingAnimationSkippable(true);
@@ -128,7 +128,7 @@ const Orchestrator = () => {
             <div className="centered">
                 <h2>{getRankQuoteText(botRank)}</h2>
             </div>
-            <BotHead isAnimatingMouth={isAnimatingMouth} />
+            <BotHead isAnimatingMouth={isAnimatingMouth} bootupCompletionCallback={bootupCompletionCallback} />
             <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
             <TextAnimationWrapper
                 textSourceArray={textToAnimate}

@@ -8,9 +8,10 @@ import headSrc from "../../../assets/images/bot/head-empty.png";
 /**
  * React Function Component displays and animates the smart-bot image.
  * @param {Boolean} isAnimatingMouth - Boolean telling component to animate mouth.
+ * @param {Function} bootupCompletionCallback - Called when bootup animation is complete.
  * @returns {JSX.Element} - A React Component instance.
  */
-const BotHead = ({ isAnimatingMouth }) => {
+const BotHead = ({ isAnimatingMouth, bootupCompletionCallback }) => {
     const [containerSize, setContainerSize] = useState({ height: 0, width: 0 });
     const [visible, setVisible] = useState(false);
 
@@ -33,7 +34,7 @@ const BotHead = ({ isAnimatingMouth }) => {
             }}
         >
             <div className="grid-layout">
-                <BotEyes />
+                <BotEyes bootupCompletionCallback={bootupCompletionCallback} />
                 <BotMouth isAnimatingMouth={isAnimatingMouth} />
             </div>
             <img data-testid="head-image" onLoad={handleImageLoad} src={headSrc} />
