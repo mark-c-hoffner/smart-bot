@@ -7,10 +7,15 @@
     font-family: Arial, Helvetica, sans-serif, monospace;
     font-weight: bold;
     font-size: 18px;
-    border: none;
     cursor: pointer; 
-    box-shadow: inset 0em 1.15em #161616;
-    background: radial-gradient(rgb(255, 255, 255), #161616);
+    
+    border-image-slice: 1;
+    border-width: .2em;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    background-color: #161616;
+    border-image-source: radial-gradient(rgb(255, 255, 255), #161616);
 }
 
 .convo-choice:hover {

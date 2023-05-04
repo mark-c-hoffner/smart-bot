@@ -31,13 +31,18 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
         control: (baseStyles, state) => ({
             ...baseStyles,
             textAlign: "center",
-            border: "none",
+            boxShadow: "none",
             cursor: "pointer",
-            boxShadow: "inset 0em 1.9em #161616",
-            background: "radial-gradient(rgb(255, 255, 255), #161616)",
             minHeight: "0px",
             height: "2.1em",
-            paddingBottom: "0px"
+            paddingBottom: "0px",
+            borderImageSlice: "1",
+            borderWidth: ".2em",
+            borderTop: "0",
+            borderLeft: "0",
+            borderRight: "0",
+            backgroundColor: "#161616",
+            borderImageSource: "radial-gradient(rgb(255, 255, 255), #161616)"
         }),
         placeholder: (baseStyles, state) => ({
             ...baseStyles,
