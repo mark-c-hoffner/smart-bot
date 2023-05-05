@@ -20,11 +20,13 @@ const Orchestrator = () => {
     const [interactableVisible, setInteractableVisible] = useState(false);
     const [isAnimatingMouth, setIsAnimatingMouth] = useState(false);
     const [isTypingAnimationSkippable, setIsTypingAnimationSkippable] = useState(false);
+    const [startupComplete, serStartupComplete] = useState(false);
 
     const bootupCompletionCallback = () => {
         const text = getWelcomeText(botRank);
         setTextToAnimate(text.body);
         doInteractableChange(getButtonWrapper([{ action: () => getAnAssertion(null), text: text.buttons[0] }]));
+        serStartupComplete(true);
     };
 
     const doInteractableChange = (interactable) => {
@@ -127,19 +129,25 @@ const Orchestrator = () => {
         <div className="centered">
             <h2>{getRankQuoteText(botRank)}</h2>
             <BotHead isAnimatingMouth={isAnimatingMouth} bootupCompletionCallback={bootupCompletionCallback} />
-            <div className="sideBySide">
-                <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
-                <TextAnimationWrapper
-                    textSourceArray={textToAnimate}
-                    textStartCallback={textStartCallback}
-                    textStopCallback={textStopCallback}
-                    completionCallback={textAnimationCompletionCallback}
-                    isSkippable={isTypingAnimationSkippable}
-                />
-            </div>
-            <div className="interactableContainer">
-                {interactableVisible ? interactable : <></>}
-            </div>
+            {startupComplete ?
+                <>
+                    <div className="sideBySide">
+                        <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
+                        <TextAnimationWrapper
+                            textSourceArray={textToAnimate}
+                            textStartCallback={textStartCallback}
+                            textStopCallback={textStopCallback}
+                            completionCallback={textAnimationCompletionCallback}
+                            isSkippable={isTypingAnimationSkippable}
+                        />
+                    </div>
+                    <div className="interactableContainer">
+                        {interactableVisible ? interactable : <></>}
+                    </div>
+                </>
+                :
+                <></>
+            }
         </div>
     );
 };
