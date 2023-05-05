@@ -5,6 +5,7 @@ const typeAnimationMock = jest.fn();
 const completionCallbackMock = jest.fn();
 const startCallbackMock = jest.fn();
 const stopCallbackMock = jest.fn();
+const scrollIntoViewMock = jest.fn()
 
 describe('TextAnimationWrapper', () => {
 
@@ -13,6 +14,8 @@ describe('TextAnimationWrapper', () => {
     beforeEach(async () => {
         jest.doMock('../CustomTypeAnimation', () => typeAnimationMock)
         typeAnimationMock.mockReturnValue('typeAnimationMock');
+
+        window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
         const obj = await import('./TextAnimationWrapper.jsx');
         TextAnimationWrapper = obj.default;
@@ -34,6 +37,13 @@ describe('TextAnimationWrapper', () => {
         expect(typeAnimationMock.mock.calls[1][0].sequence[1]).toBe("testWelcomeMessage\n");
         expect(typeAnimationMock.mock.calls[1][0].shouldSkip).toBe(false);
         expect(getByText('typeAnimationMock')).toBeTruthy();
+    })
+
+    it('passes the scroll function to type animation component', () => {
+        render(<TextAnimationWrapper textSourceArray={['testWelcomeMessage']} />);
+        expect(scrollIntoViewMock).not.toHaveBeenCalled()
+        typeAnimationMock.mock.calls[0][0].doScrollToBottom();
+        expect(scrollIntoViewMock).toHaveBeenCalledTimes(1)
     })
 
     it('preps the text array with delays and merges', () => {

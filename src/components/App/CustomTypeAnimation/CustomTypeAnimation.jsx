@@ -6,9 +6,10 @@ import "./custom-type-animation.css";
  * @param {Array} sequence - A sequential array of type animation text and actions.
  * @param {Boolean} shouldSkip - If the typing animation should be skipped.
  * @param {Number} delayBetweenTyping - How long to wait between individual text displays.
+ * @param {Function} doScrollToBottom - Function that scrolls text container to the bottom.
  * @returns {JSX.Element} - A React Component instance.
  */
-const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping }) => {
+const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrollToBottom }) => {
     const [displayedContent, setDisplayedContent] = useState("");
     const [currentText, setCurrentText] = useState(null);
     const [sequenceIndex, setSequenceIndex] = useState(null);
@@ -23,6 +24,7 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping }) => {
 
     useEffect(() => {
         if (shouldSkip && sequence != null) {
+            setDisplayedContent("");
             let concatString = '';
             sequence.forEach(e => {
                 if (typeof e === "string") {
@@ -102,6 +104,10 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping }) => {
             setDisplayedContent((displayedContent) => displayedContent + currentText[textIndex]);
         }
     }, [textIndex]);
+
+    useEffect(() => {
+        doScrollToBottom();
+    }, [displayedContent]);
 
     return (
         <pre className="type-writer">{displayedContent}</pre>

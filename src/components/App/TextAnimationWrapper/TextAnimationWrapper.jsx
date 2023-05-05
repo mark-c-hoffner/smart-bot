@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CustomTypeAnimation from "../CustomTypeAnimation";
 
 /**
@@ -13,6 +13,7 @@ import CustomTypeAnimation from "../CustomTypeAnimation";
 const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCallback, completionCallback, isSkippable }) => {
     const [editedArray, setEditedArray] = useState(null);
     const [shouldSkip, setShouldSkip] = useState(false);
+    const scrollRef = useRef(null);
 
     useEffect(() => {
         setShouldSkip(false);
@@ -48,6 +49,13 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
         return newArray;
     };
 
+    const doScrollToBottom = () => {
+        /* istanbul ignore else */
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView();
+        }
+    };
+
     return (
         <div
             className="textContainer"
@@ -61,10 +69,11 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
                 MozUserSelect: "none",
                 msUserSelect: "none",
                 userSelect: "none",
-                textAlign: "left" 
+                textAlign: "left"
             }}
         >
-            <CustomTypeAnimation sequence={editedArray} shouldSkip={shouldSkip} delayBetweenTyping={40} />
+            <CustomTypeAnimation sequence={editedArray} shouldSkip={shouldSkip} delayBetweenTyping={40} doScrollToBottom={doScrollToBottom} />
+            <div className="scrollTarget" ref={scrollRef} />
         </div >
     );
 };

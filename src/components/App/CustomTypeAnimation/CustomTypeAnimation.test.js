@@ -3,7 +3,8 @@ import { act, render } from '@testing-library/react';
 
 jest.useFakeTimers();
 
-const functionMock = jest.fn();
+const doScrollToBottomMock = jest.fn();
+const sequenceFunctionMock = jest.fn();
 
 describe('CustomTypeAnimation', () => {
 
@@ -19,34 +20,47 @@ describe('CustomTypeAnimation', () => {
     })
 
     it('renders without crashing', () => {
-        render(<CustomTypeAnimation sequence={[]} />);
+        render(<CustomTypeAnimation sequence={[]} doScrollToBottom={doScrollToBottomMock} />);
     })
 
     it('should render the first part of the first element in the sequence', () => {
-        const { getByText } = render(<CustomTypeAnimation sequence={["1234"]} delayBetweenTyping={1} />);
+        const { getByText } = render(<CustomTypeAnimation sequence={["1234"]} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
     })
 
     it('should render the next part of the first element in the sequence after the given delay', () => {
-        const { getByText } = render(<CustomTypeAnimation sequence={["1234"]} delayBetweenTyping={1} />);
+        const { getByText } = render(<CustomTypeAnimation sequence={["1234"]} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
         act(() => jest.advanceTimersByTime(1));
         expect(getByText("12")).toBeTruthy();
     })
 
+    it('should call doScrollToBottom whenever displayed text changes', () => {
+        render(<CustomTypeAnimation sequence={["1234"]} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(doScrollToBottomMock).toHaveBeenCalledTimes(2);
+        act(() => jest.advanceTimersByTime(1));
+        expect(doScrollToBottomMock).toHaveBeenCalledTimes(3);
+        act(() => jest.advanceTimersByTime(1));
+        expect(doScrollToBottomMock).toHaveBeenCalledTimes(4);
+        act(() => jest.advanceTimersByTime(1));
+        expect(doScrollToBottomMock).toHaveBeenCalledTimes(5);
+        act(() => jest.advanceTimersByTime(1));
+        expect(doScrollToBottomMock).toHaveBeenCalledTimes(5);
+    })
+
     it('should render the entire sequence when should skip is true', async () => {
         const sequence = ["1234", "4321", "abcd", "dcba"];
-        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} />);
+        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
         act(() => jest.advanceTimersByTime(1));
         expect(getByText("12")).toBeTruthy();
-        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} />);
+        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("12344321abcddcba")).toBeTruthy();
     })
 
     it('should wait when sequence element is a number', async () => {
         const sequence = ["1234", 100, "abcd"];
-        const { getByText } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} />);
+        const { getByText } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
         act(() => jest.advanceTimersByTime(1));
         act(() => jest.advanceTimersByTime(1));
@@ -66,7 +80,7 @@ describe('CustomTypeAnimation', () => {
 
     it('should clear running wait when should skip is true', async () => {
         const sequence = ["1234", 100, "4321", "abcd", "dcba"];
-        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} />);
+        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
         act(() => jest.advanceTimersByTime(1));
         act(() => jest.advanceTimersByTime(1));
@@ -75,18 +89,18 @@ describe('CustomTypeAnimation', () => {
         act(() => jest.advanceTimersByTime(1));
         expect(getByText("1234")).toBeTruthy();
         act(() => jest.advanceTimersByTime(50));
-        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} />);
+        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("12344321abcddcba")).toBeTruthy();
     })
 
     it('should call the function when sequence element is a function', () => {
-        render(<CustomTypeAnimation sequence={[functionMock]} delayBetweenTyping={1} />);
-        expect(functionMock).toHaveBeenCalledTimes(1);
+        render(<CustomTypeAnimation sequence={[sequenceFunctionMock]} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(sequenceFunctionMock).toHaveBeenCalledTimes(1);
     })
 
     it('should not call functions when skip is true', async () => {
-        const sequence = ["1234", 100, functionMock, "4321", "abcd", "dcba"];
-        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} />);
+        const sequence = ["1234", 100, sequenceFunctionMock, "4321", "abcd", "dcba"];
+        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("1")).toBeTruthy();
         act(() => jest.advanceTimersByTime(1));
         act(() => jest.advanceTimersByTime(1));
@@ -95,15 +109,15 @@ describe('CustomTypeAnimation', () => {
         act(() => jest.advanceTimersByTime(1));
         expect(getByText("1234")).toBeTruthy();
         act(() => jest.advanceTimersByTime(50));
-        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} />);
-        expect(functionMock).not.toHaveBeenCalled();
+        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(sequenceFunctionMock).not.toHaveBeenCalled();
         expect(getByText("12344321abcddcba")).toBeTruthy();
         act(() => jest.advanceTimersByTime(50));
-        expect(functionMock).not.toHaveBeenCalled();
+        expect(sequenceFunctionMock).not.toHaveBeenCalled();
     })
 
     it('should move to next element when sequence element is unmatched', () => {
-        render(<CustomTypeAnimation sequence={[null, functionMock]} delayBetweenTyping={1} />);
-        expect(functionMock).toHaveBeenCalledTimes(1);
+        render(<CustomTypeAnimation sequence={[null, sequenceFunctionMock]} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(sequenceFunctionMock).toHaveBeenCalledTimes(1);
     })
 })
