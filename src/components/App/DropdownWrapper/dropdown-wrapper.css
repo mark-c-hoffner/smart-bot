@@ -1,5 +1,6 @@
 .dropdown-container {
-    max-width: 23em;
+    min-width: 20em;
+    max-width: 20em;
 }
 
 .dropdown-container:hover {

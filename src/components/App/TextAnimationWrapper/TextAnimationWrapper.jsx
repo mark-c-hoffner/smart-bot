@@ -50,7 +50,7 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
 
     return (
         <div
-            className="TextAnimationWrapper"
+            className="textContainer"
             data-testid="text-animation-wrapper"
             onClick={triggerTypingSkip}
             style={{
@@ -61,6 +61,7 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
                 MozUserSelect: "none",
                 msUserSelect: "none",
                 userSelect: "none",
+                textAlign: "left" 
             }}
         >
             <CustomTypeAnimation sequence={editedArray} shouldSkip={shouldSkip} delayBetweenTyping={40} />

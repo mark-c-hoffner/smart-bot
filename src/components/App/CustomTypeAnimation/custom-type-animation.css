@@ -5,11 +5,12 @@
 }
 
 .type-writer::after {
-  content: "|";
+  content: "\200B|";
   animation: blink 1s steps(2) infinite;
 }
 
 .type-writer {
+  margin: 0%;
   font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace;
   font-weight: bold;
 }

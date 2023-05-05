@@ -15,7 +15,7 @@ const ButtonWrapper = ({ buttonDefinitions }) => {
     };
 
     return (
-        <>{getButtons()}</>
+        <div className="buttonWrapper">{getButtons()}</div>
     );
 };
 

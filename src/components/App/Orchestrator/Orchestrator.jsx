@@ -124,20 +124,22 @@ const Orchestrator = () => {
     }
 
     return (
-        <div>
-            <div className="centered">
-                <h2>{getRankQuoteText(botRank)}</h2>
-            </div>
+        <div className="centered">
+            <h2>{getRankQuoteText(botRank)}</h2>
             <BotHead isAnimatingMouth={isAnimatingMouth} bootupCompletionCallback={bootupCompletionCallback} />
-            <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
-            <TextAnimationWrapper
-                textSourceArray={textToAnimate}
-                textStartCallback={textStartCallback}
-                textStopCallback={textStopCallback}
-                completionCallback={textAnimationCompletionCallback}
-                isSkippable={isTypingAnimationSkippable}
-            />
-            {interactableVisible ? interactable : <></>}
+            <div className="sideBySide">
+                <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
+                <TextAnimationWrapper
+                    textSourceArray={textToAnimate}
+                    textStartCallback={textStartCallback}
+                    textStopCallback={textStopCallback}
+                    completionCallback={textAnimationCompletionCallback}
+                    isSkippable={isTypingAnimationSkippable}
+                />
+            </div>
+            <div className="interactableContainer">
+                {interactableVisible ? interactable : <></>}
+            </div>
         </div>
     );
 };

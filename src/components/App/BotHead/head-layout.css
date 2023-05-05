@@ -1,3 +1,11 @@
+.grid-container {
+    max-width: 100%;
+    max-height: 100%;
+    width: fit-content;
+    justify-content: center;
+    margin: auto;
+}
+
 .grid-container.visible {
     transition: opacity 3s;
     opacity: 1;
@@ -10,6 +18,7 @@
 .grid-layout {
     max-width: 100%;
     max-height: 100%;
+    width: fit-content;
     position: absolute;
     display: grid;
     grid-template-columns:
