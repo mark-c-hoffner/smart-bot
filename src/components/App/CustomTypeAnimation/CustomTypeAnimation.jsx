@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./custom-type-animation.css";
 
 /**
@@ -16,15 +16,21 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
     const [textIndex, setTextIndex] = useState(null);
     const [doSkip, setDoSkip] = useState(true);
 
-    let runningTimeout = null;
+    const timeoutRef = useRef(null);
 
     useEffect(() => {
-        return () => clearTimeout(runningTimeout);
+        return () => {
+            if (timeoutRef.current != null) {
+                clearTimeout(timeoutRef.current);
+            };
+        };
     }, [])
 
     useEffect(() => {
         if (shouldSkip && sequence != null) {
-            setDisplayedContent("");
+            if (timeoutRef.current != null) {
+                clearTimeout(timeoutRef.current);
+            };
             let concatString = '';
             sequence.forEach(e => {
                 if (typeof e === "string") {
@@ -33,8 +39,8 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
             });
             setCurrentText(null);
             setDoSkip(true);
-            clearTimeout(runningTimeout);
             setDisplayedContent(concatString);
+            setSequenceIndex(null);
         }
     }, [shouldSkip]);
 
@@ -55,7 +61,7 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
                     break;
                 }
                 case "number": {
-                    runningTimeout = setTimeout(moveToNextSequence, currentSequenceItem);
+                    timeoutRef.current = setTimeout(moveToNextSequence, currentSequenceItem);
                     break;
                 }
                 case "function": {
@@ -74,7 +80,7 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
     useEffect(() => {
         if (currentText != null) {
             setTextIndex(0);
-            runningTimeout = setTimeout(iterateTextIndex, delayBetweenTyping);
+            timeoutRef.current = setTimeout(iterateTextIndex, delayBetweenTyping);
         }
     }, [currentText]);
 
@@ -94,7 +100,7 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
                 moveToNextSequence();
                 return null;
             }
-            runningTimeout = setTimeout(iterateTextIndex, delayBetweenTyping);
+            timeoutRef.current = setTimeout(iterateTextIndex, delayBetweenTyping);
             return i + 1;
         });
     }

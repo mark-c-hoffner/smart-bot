@@ -19,8 +19,12 @@ describe('CustomTypeAnimation', () => {
         jest.resetAllMocks();
     })
 
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
     it('renders without crashing', () => {
-        render(<CustomTypeAnimation sequence={[]} doScrollToBottom={doScrollToBottomMock} />);
+        render(<CustomTypeAnimation sequence={[]} doScrollToBottom={doScrollToBottomMock} shouldSkip={true} />);
     })
 
     it('should render the first part of the first element in the sequence', () => {
@@ -56,6 +60,33 @@ describe('CustomTypeAnimation', () => {
         expect(getByText("12")).toBeTruthy();
         rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
         expect(getByText("12344321abcddcba")).toBeTruthy();
+    })
+
+    it('should stop running timeout on skip', async () => {
+        const sequence = ["1234", "4321", "abcd", "dcba"];
+        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(getByText("1")).toBeTruthy();
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("12")).toBeTruthy();
+        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(getByText("12344321abcddcba")).toBeTruthy();
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("12344321abcddcba")).toBeTruthy();
+        rerender(<CustomTypeAnimation sequence={["zyxw", "9875", "vuts"]} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("zyxw")).toBeTruthy();
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("zyxw9875")).toBeTruthy();
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("zyxw9875vuts")).toBeTruthy();
     })
 
     it('should wait when sequence element is a number', async () => {
