@@ -71,7 +71,10 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
             cursor: "pointer",
             backgroundColor: state.isFocused ? rgb(60, 60, 60) : rgb(50, 50, 50),
             color: state.isFocused ? rgb(255, 255, 255) : rgb(230, 230, 230),
-            fontSize: state.isFocused ? '1.1em' : '1em'
+            fontSize: state.isFocused ? '1.1em' : '1em',
+            "&:active": {
+                backgroundColor: rgb(70, 70, 70),
+            },
         }),
     }
 
