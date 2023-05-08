@@ -1,0 +1,8 @@
+.image-container.visible {
+    transition: opacity 3s;
+    opacity: 1;
+}
+
+.image-container.notVisible {
+    opacity: 0;
+}

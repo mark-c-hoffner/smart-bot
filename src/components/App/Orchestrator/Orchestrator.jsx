@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { getRandomImageItem, getColorItemFromImage, updateColors, getAllColorOptions } from "../../../tools/match-data-manager";
 import { getRankQuoteText, getWelcomeText, getAnswerIsCorrectText, getColorCorrectionText, getWrongText, getMistakeText, getCorrectionText, getCorrectionMistakeText, getAssertionText } from "../../../tools/text-data";
 import botRank from "../../../tools/rank-getter";
 
+import ImagePromptWrapper from "../ImagePromptWrapper";
 import BotHead from "../BotHead";
 import TextAnimationWrapper from "../TextAnimationWrapper";
 import DropdownWrapper from "../DropdownWrapper";
@@ -132,7 +133,7 @@ const Orchestrator = () => {
             {startupComplete ?
                 <>
                     <div className="sideBySide">
-                        <img src={imageDisplayItem.source} alt={imageDisplayItem.alt} />
+                        <ImagePromptWrapper imageDisplayItem={imageDisplayItem} />
                         <TextAnimationWrapper
                             textSourceArray={textToAnimate}
                             textStartCallback={textStartCallback}
