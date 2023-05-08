@@ -20,7 +20,7 @@ const BotEyes = ({ isAnimatingMouth }) => {
     useEffect(() => {
         if (isAnimatingMouth) {
             lastSpeechImage = mouthSrc;
-            speechTimeout = setTimeout(doSpeechAnimation, ANIMATION_TIME);
+            doSpeechAnimation();
         } else {
             clearTimeout(speechTimeout);
         }

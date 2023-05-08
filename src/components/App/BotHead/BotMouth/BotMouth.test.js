@@ -58,7 +58,6 @@ describe('BotMouth', () => {
 
         setRandomReturnToStandard();
         rerender(<BotMouth isAnimatingMouth={true} />);
-        act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech2");
         act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech3");
@@ -74,7 +73,6 @@ describe('BotMouth', () => {
 
         setRandomReturnToStandard();
         rerender(<BotMouth isAnimatingMouth={true} />);
-        act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech2");
         act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech3");
@@ -92,7 +90,6 @@ describe('BotMouth', () => {
         randomMock.mockReturnValueOnce(0).mockReturnValueOnce(200).mockReturnValueOnce(0).mockReturnValue(0);
 
         rerender(<BotMouth isAnimatingMouth={true} />);
-        act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech2");
         act(() => jest.advanceTimersByTime(175));
         expect(getByTestId("mouth").src).toBe("http://localhost/speech2");
