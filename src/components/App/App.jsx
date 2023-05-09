@@ -2,6 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import './App.css';
 
+import GitHubLink from "./GitHubLink";
 import Orchestrator from "./Orchestrator";
 
 /**
@@ -9,6 +10,9 @@ import Orchestrator from "./Orchestrator";
  * @returns {JSX.Element} - A React Component instance.
  */
 const App = () => {
+
+    const projectAddress = "https://github.com/mark-c-hoffner/smart-bot";
+
     return (
         <div className="App">
             <Helmet>
@@ -17,6 +21,9 @@ const App = () => {
             </Helmet>
             <div className="centered" data-testid="title">
                 <h1>smart-bot</h1>
+            </div>
+            <div className="topRight">
+                <GitHubLink linkAddress={projectAddress} />
             </div>
             <Orchestrator />
         </div >

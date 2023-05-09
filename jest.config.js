@@ -27,6 +27,7 @@ export default {
         "\\.(css|less)$": "<rootDir>/jest/css.mock.js",
         "\\.(gif)$": "<rootDir>/jest/gif.mock.js",
         "\\.(png)$": "<rootDir>/jest/png.mock.js",
+        "\\.(svg)$": "<rootDir>/jest/svg.mock.js",
     },
     setupFiles: [
         '<rootDir>/jest/jest.setup.js'
