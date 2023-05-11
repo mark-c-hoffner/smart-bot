@@ -41,9 +41,11 @@ describe('TextAnimationWrapper', () => {
 
     it('passes the scroll function to type animation component', () => {
         render(<TextAnimationWrapper textSourceArray={['testWelcomeMessage']} />);
-        expect(scrollIntoViewMock).not.toHaveBeenCalled()
+        expect(scrollIntoViewMock).not.toHaveBeenCalled();
         typeAnimationMock.mock.calls[0][0].doScrollToBottom();
-        expect(scrollIntoViewMock).toHaveBeenCalledTimes(1)
+        expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+        expect(scrollIntoViewMock.mock.lastCall[0].block).toBe('nearest');
+        expect(scrollIntoViewMock.mock.lastCall[0].inline).toBe('nearest');
     })
 
     it('preps the text array with delays and merges', () => {

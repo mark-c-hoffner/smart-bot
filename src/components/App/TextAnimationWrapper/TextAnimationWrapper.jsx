@@ -52,7 +52,7 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
     const doScrollToBottom = () => {
         /* istanbul ignore else */
         if (scrollRef.current) {
-            scrollRef.current.scrollIntoView();
+            scrollRef.current.scrollIntoView({ block: "nearest", inline: "nearest" });
         }
     };
 
