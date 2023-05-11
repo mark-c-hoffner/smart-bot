@@ -12,6 +12,8 @@ import "./dropdown-wrapper.css";
  */
 const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange }) => {
 
+    const fontSize = 'clamp(1em, 3.7dvh, 2.5em)';
+
     const getDropdownDisplayItems = (data) => {
         const options = [];
         let i = 0;
@@ -33,9 +35,11 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
             textAlign: "center",
             boxShadow: "none",
             cursor: "pointer",
-            minHeight: "0px",
-            height: "2.1em",
-            paddingBottom: "0px",
+            // fontSize: fontSize,
+            minHeight: '1em',
+            height: "max-content",
+            padding: "1px 6px",
+            margin: "0px",
             borderImageSlice: "1",
             borderWidth: ".2em",
             borderTop: "0",
@@ -44,17 +48,21 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
             backgroundColor: "#161616",
             borderImageSource: "radial-gradient(rgb(255, 255, 255), #161616)"
         }),
+        valueContainer: (baseStyles, state) => ({
+            ...baseStyles,
+            padding: "0%"
+        }),
         placeholder: (baseStyles, state) => ({
             ...baseStyles,
-            fontSize: "1.4em",
             color: rgb(213, 213, 213),
+            margin: "0%",
+            padding: "0%",
             "&:hover": {
                 color: "white",
             },
         }),
         singleValue: (baseStyles, state) => ({
             ...baseStyles,
-            fontSize: "1.4em",
             color: rgb(213, 213, 213),
             "&:hover": {
                 color: "white",
@@ -71,11 +79,38 @@ const DropdownWrapper = ({ imageItem, colorItem, colors, handleDropdownChange })
             cursor: "pointer",
             backgroundColor: state.isFocused ? rgb(60, 60, 60) : rgb(50, 50, 50),
             color: state.isFocused ? rgb(255, 255, 255) : rgb(230, 230, 230),
-            fontSize: state.isFocused ? '1.1em' : '1em',
+            fontSize: state.isFocused ? 'clamp(1.2em, 4.2dvh, 3.2em)' : fontSize,
+            padding: "1%",
             "&:active": {
-                backgroundColor: rgb(70, 70, 70),
+                backgroundColor: rgb(90, 90, 90),
             },
         }),
+        dropdownIndicator: (baseStyles, state) => ({
+            ...baseStyles,
+            paddingTop: "0%",
+            paddingBottom: "0%",
+            fontSize: fontSize,
+            minHeight: '1em',
+            "svg:first-of-type": {
+                width: fontSize,
+                height: fontSize
+            },
+        }),
+        indicatorSeparator: (baseStyles, state) => ({
+            ...baseStyles,
+            padding: "0%",
+            margin: "0%",
+            minHeight: '10px',
+        }),
+        indicatorsContainer: (baseStyles, state) => ({
+            ...baseStyles,
+            padding: "0%",
+            minHeight: '1em',
+            "svg:first-of-type": {
+                width: fontSize,
+                height: fontSize
+            },
+        })
     }
 
     return (

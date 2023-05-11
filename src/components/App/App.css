@@ -1,47 +1,67 @@
 .centered {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
-.sideBySide {
-  display: flex;
-  padding: 5%;
-  justify-content: center;
-}
-
-.textContainer {
-  padding-left: 5%;
-  max-width: 20em;
-  min-width: 20em;
-  max-height: 10em;
-  min-height: 10em;
-  overflow-y: auto;
-  scroll-behavior: smooth; 
-}
-
-.textContainer::-webkit-scrollbar{
-  display: none;
-}
-
-.interactableContainer {
-    display: flex;
-    justify-content: center;
-}
-
-pre {
-  white-space: pre-wrap;       /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .topRight {
-  position:absolute;
-  right:0;
-  top:0;
+  position: absolute;
+  right: 0;
+  top: 0;
   margin-top: 1em;
   margin-right: 1em;
+}
+
+.main-body-container {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-dialog-box {
+  display: flex;
+  justify-content: center;
+  max-width: 50em;
+  width: 70%;
+  height: 17dvh;
+  max-height: 17dvh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2dvh;
+  margin-bottom: 2dvh;
+}
+
+.textContainer {
+  padding-left: 1em;
+  max-width: 70%;
+  width: 70%;
+  min-width: 70%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.textContainer::-webkit-scrollbar {
+  display: none;
+}
+
+pre {
+  white-space: pre-wrap;
+  /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+}
+
+.interactableContainer {
+  display: flex;
+  justify-content: center;
 }

@@ -88,8 +88,8 @@ const BotEyes = ({ bootupCompletionCallback }) => {
 
     return (
         <>
-            <img data-testid="left-eye" className={"leftEye"} src={eyeSource.left} />
-            <img data-testid="right-eye" className={"rightEye"} src={eyeSource.right} />
+            <img data-testid="left-eye" className={"bot leftEye"} src={eyeSource.left} />
+            <img data-testid="right-eye" className={"bot rightEye"} src={eyeSource.right} />
         </>
     );
 };

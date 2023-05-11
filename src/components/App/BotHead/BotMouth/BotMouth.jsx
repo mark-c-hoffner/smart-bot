@@ -40,7 +40,7 @@ const BotEyes = ({ isAnimatingMouth }) => {
 
     return (
         <>
-            <img data-testid="mouth" className={"mouth"} src={mouthSrc} />
+            <img data-testid="mouth" className="bot mouth" src={mouthSrc} />
         </>
     );
 };

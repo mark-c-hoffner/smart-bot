@@ -62,7 +62,6 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
             data-testid="text-animation-wrapper"
             onClick={triggerTypingSkip}
             style={{
-                minHeight: "10em",
                 cursor: isSkippable ? "progress" : "default",
                 WebkitTouchCallout: "none",
                 WebkitUserSelect: "none",

@@ -127,12 +127,12 @@ const Orchestrator = () => {
     }
 
     return (
-        <div className="centered">
+        <div className="main-body-container">
             <h2>{getRankQuoteText(botRank)}</h2>
             <BotHead isAnimatingMouth={isAnimatingMouth} bootupCompletionCallback={bootupCompletionCallback} />
             {startupComplete ?
                 <>
-                    <div className="sideBySide">
+                    <div className="bot-dialog-box">
                         <ImagePromptWrapper imageDisplayItem={imageDisplayItem} />
                         <TextAnimationWrapper
                             textSourceArray={textToAnimate}

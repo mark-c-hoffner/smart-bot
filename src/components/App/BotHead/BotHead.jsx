@@ -12,14 +12,9 @@ import headSrc from "../../../assets/images/bot/head-empty.png";
  * @returns {JSX.Element} - A React Component instance.
  */
 const BotHead = ({ isAnimatingMouth, bootupCompletionCallback }) => {
-    const [containerSize, setContainerSize] = useState({ height: 0, width: 0 });
     const [visible, setVisible] = useState(false);
 
-    const handleImageLoad = ({ target }) => {
-        setContainerSize({
-            height: target.height,
-            width: target.width,
-        });
+    const handleImageLoad = () => {
         setVisible(true);
     };
 
@@ -27,17 +22,12 @@ const BotHead = ({ isAnimatingMouth, bootupCompletionCallback }) => {
         <div
             data-testid="grid-container"
             className={['grid-container', (visible) ? 'visible' : 'notVisible'].join(' ')}
-            style={{
-                position: "relative",
-                maxHeight: containerSize.height,
-                maxWidth: containerSize.width
-            }}
         >
             <div className="grid-layout">
                 <BotEyes bootupCompletionCallback={bootupCompletionCallback} />
                 <BotMouth isAnimatingMouth={isAnimatingMouth} />
             </div>
-            <img data-testid="head-image" onLoad={handleImageLoad} src={headSrc} />
+            <img data-testid="head-image" className="bot" onLoad={handleImageLoad} src={headSrc} />
         </div >
     )
 }

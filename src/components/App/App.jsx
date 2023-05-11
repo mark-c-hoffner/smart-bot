@@ -19,11 +19,11 @@ const App = () => {
                 <meta charset="utf-8" />
                 <title>smart-bot</title>
             </Helmet>
-            <div className="centered" data-testid="title">
-                <h1>smart-bot</h1>
-            </div>
             <div className="topRight">
                 <GitHubLink linkAddress={projectAddress} />
+            </div>
+            <div className="centered" data-testid="title">
+                <h1>smart-bot</h1>
             </div>
             <Orchestrator />
         </div >
