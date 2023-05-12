@@ -1,0 +1,9 @@
+.dropdown-container {
+    min-width: 20em;
+    max-width: 20em;
+    font-size: clamp(1em, 3.7dvh, 2.5em);
+}
+
+.dropdown-container:hover {
+    transform: scale(1.05);
+}
