@@ -30,7 +30,6 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 2dvh;
-  margin-bottom: 2dvh;
 }
 
 .textContainer {
@@ -64,4 +63,8 @@ pre {
 .interactableContainer {
   display: flex;
   justify-content: center;
+}
+
+.scrollBuffer {
+  height: clamp(1em, 2.5dvh, 2em);
 }

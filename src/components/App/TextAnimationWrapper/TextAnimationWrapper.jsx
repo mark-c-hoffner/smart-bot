@@ -52,7 +52,8 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
     const doScrollToBottom = () => {
         /* istanbul ignore else */
         if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ block: "nearest", inline: "nearest" });
+            console.log("scroll")
+            scrollRef.current.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
         }
     };
 
@@ -72,6 +73,7 @@ const TextAnimationWrapper = ({ textSourceArray, textStartCallback, textStopCall
             }}
         >
             <CustomTypeAnimation sequence={editedArray} shouldSkip={shouldSkip} delayBetweenTyping={40} doScrollToBottom={doScrollToBottom} />
+            <div className="scrollBuffer"/>
             <div className="scrollTarget" ref={scrollRef} />
         </div >
     );
