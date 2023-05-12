@@ -89,6 +89,19 @@ describe('CustomTypeAnimation', () => {
         expect(getByText("zyxw9875vuts")).toBeTruthy();
     })
 
+    it('should reset text index on skip', async () => {
+        const sequence = ["1", "4321", "abcd", "dcba"];
+        const { getByText, rerender } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(getByText("1")).toBeTruthy();
+        rerender(<CustomTypeAnimation sequence={sequence} shouldSkip={true} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        expect(getByText("14321abcddcba")).toBeTruthy();
+        rerender(<CustomTypeAnimation sequence={["zyxw", "9875", "vuts"]} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        act(() => jest.advanceTimersByTime(1));
+        expect(getByText("zyxw")).toBeTruthy();
+    })
+
     it('should wait when sequence element is a number', async () => {
         const sequence = ["1234", 100, "abcd"];
         const { getByText } = render(<CustomTypeAnimation sequence={sequence} shouldSkip={false} delayBetweenTyping={1} doScrollToBottom={doScrollToBottomMock} />);

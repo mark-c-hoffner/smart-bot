@@ -17,26 +17,26 @@ const CustomTypeAnimation = ({ sequence, shouldSkip, delayBetweenTyping, doScrol
     const [doSkip, setDoSkip] = useState(true);
 
     const timeoutRef = useRef(null);
+    const stopRunningTimeout = () => {
+        if (timeoutRef.current != null) {
+            clearTimeout(timeoutRef.current);
+        };
+    };
 
     useEffect(() => {
-        return () => {
-            if (timeoutRef.current != null) {
-                clearTimeout(timeoutRef.current);
-            };
-        };
+        return stopRunningTimeout;
     }, [])
 
     useEffect(() => {
         if (shouldSkip && sequence != null) {
-            if (timeoutRef.current != null) {
-                clearTimeout(timeoutRef.current);
-            };
+            stopRunningTimeout();
             let concatString = '';
             sequence.forEach(e => {
                 if (typeof e === "string") {
                     concatString = concatString.concat('', e);
                 }
             });
+            setTextIndex(null);
             setCurrentText(null);
             setDoSkip(true);
             setDisplayedContent(concatString);
